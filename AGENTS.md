@@ -4,7 +4,7 @@
 
 ## Package Management with Bun
 
-This project uses **Bun** as the JavaScript package manager. Always use Bun instead of Node.js, npm, pnpm, or Vite.
+This project uses **Bun** as the JavaScript package manager. Always use Bun instead of Node.js, npm, pnpm, or Yarn.
 
 ### Core Commands
 
