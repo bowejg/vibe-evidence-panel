@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { FileUpload } from '@/components/FileUpload'
+import { FilesUpload } from '@/components/FilesUpload'
 import { StudySetup } from '@/components/StudySetup'
 import { AnalysisGrid } from '@/components/AnalysisGrid'
 import { AIChat } from '@/components/AIChat'
@@ -6,8 +8,16 @@ import { AIChat } from '@/components/AIChat'
 type Tab = 'study-setup' | 'analysis-grid' | 'ai-chat'
 
 function App() {
+  const [guideUploaded, setGuideUploaded] = useState(false)
+  const [filesUploaded, setFilesUploaded] = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('study-setup')
 
+  // Stage 1: Upload discussion guide
+  if (!guideUploaded) {
+    return <FileUpload onGuideUploaded={() => setGuideUploaded(true)} />
+  }
+
+  // Render main app with navigation
   return (
     <div className="h-screen bg-[#fafafa] flex flex-col">
       {/* Top Navigation Toggle */}
@@ -50,9 +60,16 @@ function App() {
 
       {/* Content Area with Fade Transition */}
       <div className="flex-1 min-h-0 animate-in fade-in duration-300">
-        {activeTab === 'study-setup' && <StudySetup />}
-        {activeTab === 'analysis-grid' && <AnalysisGrid />}
-        {activeTab === 'ai-chat' && <AIChat />}
+        {/* Stage 2: Upload interview files (if not uploaded yet) */}
+        {!filesUploaded ? (
+          <FilesUpload onFilesUploaded={() => setFilesUploaded(true)} />
+        ) : (
+          <>
+            {activeTab === 'study-setup' && <StudySetup />}
+            {activeTab === 'analysis-grid' && <AnalysisGrid />}
+            {activeTab === 'ai-chat' && <AIChat />}
+          </>
+        )}
       </div>
     </div>
   )
