@@ -9,9 +9,9 @@ function App() {
   const [activeTab, setActiveTab] = useState<Tab>('study-setup')
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="h-screen bg-[#fafafa] flex flex-col">
       {/* Top Navigation Toggle */}
-      <div className="border-b border-neutral-200/60 bg-white/80 backdrop-blur-sm py-4 sticky top-0 z-10">
+      <div className="flex-shrink-0 border-b border-neutral-200/60 bg-white/80 backdrop-blur-sm py-4 z-10">
         <div className="max-w-7xl mx-auto px-8 flex justify-center">
           <div className="inline-flex rounded-lg p-0.5 bg-neutral-100/80 shadow-sm">
             <button
@@ -49,7 +49,7 @@ function App() {
       </div>
 
       {/* Content Area with Fade Transition */}
-      <div className="animate-in fade-in duration-300">
+      <div className="flex-1 min-h-0 animate-in fade-in duration-300">
         {activeTab === 'study-setup' && <StudySetup />}
         {activeTab === 'analysis-grid' && <AnalysisGrid />}
         {activeTab === 'ai-chat' && <AIChat />}

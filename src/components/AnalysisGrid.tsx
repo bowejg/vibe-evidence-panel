@@ -540,7 +540,13 @@ export function AnalysisGrid() {
                     </div>
                   </td>
                   <td className="px-8 py-4">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-700 text-xs font-medium">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                        participant.segment === 'Oncologist'
+                          ? 'bg-purple-50/50 text-purple-500'
+                          : 'bg-blue-50/50 text-blue-500'
+                      }`}
+                    >
                       {participant.segment}
                     </span>
                   </td>

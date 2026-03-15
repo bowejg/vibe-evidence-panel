@@ -57,7 +57,7 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
     >
       {/* Header - Column Header Style */}
       <div
-        className="flex items-center justify-between px-8 border-b border-neutral-200/60 bg-neutral-50/50"
+        className="flex-shrink-0 flex items-center justify-between px-8 border-b border-neutral-200/60 bg-neutral-50/50"
         style={{ height: '44px' }}
       >
         <input
@@ -92,7 +92,7 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
       </div>
 
       {/* Form Content */}
-      <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8">
+      <div className="flex-1 min-h-0 overflow-y-auto px-8 py-8 space-y-8">
         {/* What to Extract */}
         <div className="space-y-3">
           <label className="block text-sm font-medium text-neutral-900">
@@ -170,7 +170,7 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-neutral-100 px-8 py-6">
+      <div className="flex-shrink-0 border-t border-neutral-100 px-8 py-6">
         <button
           onClick={handleCreateColumn}
           className="w-full px-4 py-2 rounded-lg border border-neutral-200 bg-white shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
