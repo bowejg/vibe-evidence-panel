@@ -56,6 +56,9 @@ export function CellDetailSidebar({
       className={`bg-white border-l border-neutral-200/60 flex flex-col flex-shrink-0 h-full overflow-hidden transition-all duration-300 ease-out ${
         isOpen ? 'w-[576px] opacity-100' : 'w-0 opacity-0 border-l-0'
       }`}
+      style={{
+        boxShadow: isOpen ? '-4px 0 12px -4px rgba(0, 0, 0, 0.06)' : 'none',
+      }}
     >
       {/* Header */}
       <div

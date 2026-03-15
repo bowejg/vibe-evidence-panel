@@ -25,7 +25,7 @@ export function FileUpload({ onGuideUploaded }: FileUploadProps) {
               <Upload className="w-8 h-8 text-blue-600" />
             </div>
             <h1 className="text-4xl font-semibold text-neutral-900 tracking-tight">
-              Welcome to Vibe
+              Upload your discussion guide
             </h1>
             <p className="text-lg text-neutral-500 max-w-xl mx-auto">
               Upload your discussion guide to get started with your qualitative
