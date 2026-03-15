@@ -10,6 +10,7 @@ export function AnalysisGrid() {
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [isCellDetailOpen, setIsCellDetailOpen] = useState(false)
   const [highlightedCell, setHighlightedCell] = useState<string | null>(null)
+  const [loadingCells, setLoadingCells] = useState<Set<string>>(new Set())
 
   // Citation to cell mapping (citation number -> cell ID)
   const citationMap: Record<string, string> = {
@@ -49,6 +50,36 @@ export function AnalysisGrid() {
     setIsAddColumnOpen(false)
     // Open cell detail panel
     setIsCellDetailOpen(true)
+  }
+
+  const handleGenerateFromGuide = () => {
+    // Switch to table view
+    setViewMode('table')
+
+    // Mark all cells as loading
+    const allCells = new Set<string>()
+    participants.forEach((_, index) => {
+      allCells.add(`cell-${index}-diagnosis`)
+      allCells.add(`cell-${index}-unmetNeeds`)
+      allCells.add(`cell-${index}-rating`)
+      allCells.add(`cell-${index}-ratingReason`)
+    })
+    setLoadingCells(allCells)
+
+    // Gradually remove loading state
+    const cellKeys = Array.from(allCells)
+    cellKeys.forEach((cellKey, index) => {
+      setTimeout(
+        () => {
+          setLoadingCells((prev) => {
+            const newSet = new Set(prev)
+            newSet.delete(cellKey)
+            return newSet
+          })
+        },
+        1000 + index * 200,
+      ) // Stagger the loading
+    })
   }
 
   // Sample participant data
@@ -240,7 +271,7 @@ export function AnalysisGrid() {
 
             {/* Generate from Guide */}
             <button
-              onClick={() => setViewMode('table')}
+              onClick={handleGenerateFromGuide}
               className="group p-8 bg-white rounded-xl border-2 border-blue-200 hover:border-blue-300 hover:shadow-lg transition-all duration-200 text-left relative overflow-hidden"
             >
               <div className="absolute top-3 right-3">
@@ -573,11 +604,8 @@ export function AnalysisGrid() {
             </thead>
             <tbody className="divide-y divide-neutral-100">
               {participants.map((participant, index) => (
-                <tr
-                  key={participant.id}
-                  className="group hover:bg-neutral-50/50 transition-colors"
-                >
-                  <td className="sticky left-0 z-10 px-8 py-4 bg-white group-hover:bg-neutral-50/50 border-r border-neutral-200">
+                <tr key={participant.id} className="group transition-colors">
+                  <td className="sticky left-0 z-10 px-8 py-4 bg-white group-hover:bg-neutral-50 border-r border-neutral-200 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="relative w-4 h-4">
                         <span className="absolute inset-0 flex items-center justify-center text-sm text-neutral-500 font-medium group-hover:opacity-0 transition-opacity">
@@ -608,7 +636,7 @@ export function AnalysisGrid() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-8 py-4">
+                  <td className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors">
                     <span
                       className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
                         participant.segment === 'Oncologist'
@@ -619,7 +647,7 @@ export function AnalysisGrid() {
                       {participant.segment}
                     </span>
                   </td>
-                  <td className="px-8 py-4">
+                  <td className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors">
                     <span className="text-sm text-neutral-600">
                       {participant.date}
                     </span>
@@ -627,67 +655,115 @@ export function AnalysisGrid() {
                   <td
                     id={`cell-${index}-diagnosis`}
                     onDoubleClick={handleCellDoubleClick}
-                    className={`px-8 py-4 transition-all duration-500 cursor-pointer hover:bg-neutral-50 ${
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
                       highlightedCell === `cell-${index}-diagnosis`
                         ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
                         : ''
                     }`}
                   >
-                    <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
-                      {participant.diagnosis}
-                      {participant.diagnosisCitations.map((citation, idx) => (
-                        <button
-                          key={idx}
-                          className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                          [{citation}]
-                        </button>
-                      ))}
-                    </div>
-                  </td>
-                  <td
-                    id={`cell-${index}-unmetNeeds`}
-                    onDoubleClick={handleCellDoubleClick}
-                    className={`px-8 py-4 transition-all duration-500 cursor-pointer hover:bg-neutral-50 ${
-                      highlightedCell === `cell-${index}-unmetNeeds`
-                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
-                        : ''
-                    }`}
-                  >
-                    <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
-                      {participant.unmetNeeds}
-                      {participant.unmetNeedsCitations.map((citation, idx) => (
-                        <button
-                          key={idx}
-                          className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                          [{citation}]
-                        </button>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-8 py-4">
-                    <div className="inline-flex items-center justify-center px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-900 text-sm font-semibold">
-                      {participant.rating}
-                    </div>
-                  </td>
-                  <td className="px-8 py-4">
-                    <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
-                      {participant.ratingReason}
-                      {participant.ratingReasonCitations.map(
-                        (citation, idx) => (
+                    {loadingCells.has(`cell-${index}-diagnosis`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
+                        {participant.diagnosis}
+                        {participant.diagnosisCitations.map((citation, idx) => (
                           <button
                             key={idx}
                             className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
                           >
                             [{citation}]
                           </button>
-                        ),
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    id={`cell-${index}-unmetNeeds`}
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
+                      highlightedCell === `cell-${index}-unmetNeeds`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
+                  >
+                    {loadingCells.has(`cell-${index}-unmetNeeds`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
+                        {participant.unmetNeeds}
+                        {participant.unmetNeedsCitations.map(
+                          (citation, idx) => (
+                            <button
+                              key={idx}
+                              className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                              [{citation}]
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    id={`cell-${index}-rating`}
+                    className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors"
+                  >
+                    {loadingCells.has(`cell-${index}-rating`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="h-7 w-12 bg-neutral-200 rounded animate-pulse" />
+                      </div>
+                    ) : (
+                      <div className="inline-flex items-center justify-center px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-900 text-sm font-semibold">
+                        {participant.rating}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    id={`cell-${index}-ratingReason`}
+                    className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors"
+                  >
+                    {loadingCells.has(`cell-${index}-ratingReason`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
+                        {participant.ratingReason}
+                        {participant.ratingReasonCitations.map(
+                          (citation, idx) => (
+                            <button
+                              key={idx}
+                              className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                              [{citation}]
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    )}
                   </td>
                   {!isAddColumnOpen && !isChatOpen && !isCellDetailOpen && (
-                    <td className="px-8 py-4">
+                    <td className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors">
                       {/* Empty cell for new column */}
                     </td>
                   )}
