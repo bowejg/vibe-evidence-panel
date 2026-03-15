@@ -17,12 +17,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { SegmentsReview } from './SegmentsReview'
 
 export function StudySetup() {
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [showAllSegments, setShowAllSegments] = useState(false)
   const [showAllKeywords, setShowAllKeywords] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [isSegmentsReviewOpen, setIsSegmentsReviewOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const description =
@@ -345,7 +347,7 @@ export function StudySetup() {
                       extracted from your discussion guide
                     </p>
                     <button
-                      onClick={() => console.log('Review segments')}
+                      onClick={() => setIsSegmentsReviewOpen(true)}
                       className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
                     >
                       Review & Confirm →
@@ -427,6 +429,12 @@ export function StudySetup() {
           </div>
         </div>
       </div>
+
+      {/* Segments Review Fullscreen */}
+      <SegmentsReview
+        isOpen={isSegmentsReviewOpen}
+        onClose={() => setIsSegmentsReviewOpen(false)}
+      />
     </div>
   )
 }
