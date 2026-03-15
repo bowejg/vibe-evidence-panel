@@ -3,12 +3,31 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { AddColumnSidebar } from './AddColumnSidebar'
 import { ChatSidebar } from './ChatSidebar'
 import { CellDetailSidebar } from './CellDetailSidebar'
+import { ParticipantDetailSidebar } from './ParticipantDetailSidebar'
+
+type Participant = {
+  id: number
+  fileName: string
+  participant: string
+  segment: string
+  date: string
+  diagnosis: string
+  diagnosisCitations: number[]
+  unmetNeeds: string
+  unmetNeedsCitations: number[]
+  rating: number
+  ratingReason: string
+  ratingReasonCitations: number[]
+}
 
 export function AnalysisGrid() {
   const [viewMode, setViewMode] = useState<'options' | 'table'>('options')
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [isCellDetailOpen, setIsCellDetailOpen] = useState(false)
+  const [isParticipantDetailOpen, setIsParticipantDetailOpen] = useState(false)
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<Participant | null>(null)
   const [highlightedCell, setHighlightedCell] = useState<string | null>(null)
   const [loadingCells, setLoadingCells] = useState<Set<string>>(new Set())
 
@@ -48,8 +67,19 @@ export function AnalysisGrid() {
     // Close other panels
     setIsChatOpen(false)
     setIsAddColumnOpen(false)
+    setIsParticipantDetailOpen(false)
     // Open cell detail panel
     setIsCellDetailOpen(true)
+  }
+
+  const handleParticipantClick = (participant: Participant) => {
+    // Close other panels
+    setIsChatOpen(false)
+    setIsAddColumnOpen(false)
+    setIsCellDetailOpen(false)
+    // Set selected participant and open panel
+    setSelectedParticipant(participant)
+    setIsParticipantDetailOpen(true)
   }
 
   const handleGenerateFromGuide = () => {
@@ -353,6 +383,7 @@ export function AnalysisGrid() {
                 setIsChatOpen(true)
                 setIsAddColumnOpen(false)
                 setIsCellDetailOpen(false)
+                setIsParticipantDetailOpen(false)
               }}
               className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-200 bg-white shadow-sm hover:bg-neutral-50 hover:border-neutral-300 transition-all"
             >
@@ -392,6 +423,7 @@ export function AnalysisGrid() {
                 setIsAddColumnOpen(true)
                 setIsChatOpen(false)
                 setIsCellDetailOpen(false)
+                setIsParticipantDetailOpen(false)
               }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
             >
@@ -442,6 +474,12 @@ export function AnalysisGrid() {
         <AddColumnSidebar
           isOpen={isAddColumnOpen}
           onClose={() => setIsAddColumnOpen(false)}
+        />
+        {/* Participant Detail Sidebar on Left */}
+        <ParticipantDetailSidebar
+          isOpen={isParticipantDetailOpen}
+          onClose={() => setIsParticipantDetailOpen(false)}
+          participant={selectedParticipant}
         />
         {/* Table Container - Scrollable */}
         <div className="flex-1 overflow-auto min-w-0">
@@ -570,36 +608,40 @@ export function AnalysisGrid() {
                     Reason for rating
                   </div>
                 </th>
-                {!isAddColumnOpen && !isChatOpen && !isCellDetailOpen && (
-                  <th
-                    className="px-8 py-3.5 text-left bg-neutral-50/50"
-                    style={{ minWidth: '200px' }}
-                  >
-                    <button
-                      onClick={() => {
-                        setIsAddColumnOpen(true)
-                        setIsChatOpen(false)
-                        setIsCellDetailOpen(false)
-                      }}
-                      className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium"
+                {!isAddColumnOpen &&
+                  !isChatOpen &&
+                  !isCellDetailOpen &&
+                  !isParticipantDetailOpen && (
+                    <th
+                      className="px-8 py-3.5 text-left bg-neutral-50/50"
+                      style={{ minWidth: '200px' }}
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                      <button
+                        onClick={() => {
+                          setIsAddColumnOpen(true)
+                          setIsChatOpen(false)
+                          setIsCellDetailOpen(false)
+                          setIsParticipantDetailOpen(false)
+                        }}
+                        className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                      New column
-                    </button>
-                  </th>
-                )}
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                        New column
+                      </button>
+                    </th>
+                  )}
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
@@ -615,7 +657,10 @@ export function AnalysisGrid() {
                           <Checkbox />
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => handleParticipantClick(participant)}
+                        className="flex items-center gap-3 hover:opacity-75 transition-opacity"
+                      >
                         <div className="w-8 h-8 rounded bg-red-100 flex items-center justify-center flex-shrink-0">
                           <svg
                             className="w-5 h-5 text-red-600"
@@ -633,7 +678,7 @@ export function AnalysisGrid() {
                             {participant.participant}
                           </div>
                         </div>
-                      </div>
+                      </button>
                     </div>
                   </td>
                   <td className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors">
