@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AddColumnSidebar } from './AddColumnSidebar'
 import { ChatSidebar } from './ChatSidebar'
+import { CellDetailSidebar } from './CellDetailSidebar'
 
 export function AnalysisGrid() {
   const [viewMode, setViewMode] = useState<'options' | 'table'>('options')
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [isCellDetailOpen, setIsCellDetailOpen] = useState(false)
   const [highlightedCell, setHighlightedCell] = useState<string | null>(null)
 
   // Citation to cell mapping (citation number -> cell ID)
@@ -39,6 +41,14 @@ export function AnalysisGrid() {
     // Trigger highlight animation
     setHighlightedCell(cellId)
     setTimeout(() => setHighlightedCell(null), 2000)
+  }
+
+  const handleCellDoubleClick = () => {
+    // Close other panels
+    setIsChatOpen(false)
+    setIsAddColumnOpen(false)
+    // Open cell detail panel
+    setIsCellDetailOpen(true)
   }
 
   // Sample participant data
@@ -311,6 +321,7 @@ export function AnalysisGrid() {
               onClick={() => {
                 setIsChatOpen(true)
                 setIsAddColumnOpen(false)
+                setIsCellDetailOpen(false)
               }}
               className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-200 bg-white shadow-sm hover:bg-neutral-50 hover:border-neutral-300 transition-all"
             >
@@ -349,6 +360,7 @@ export function AnalysisGrid() {
               onClick={() => {
                 setIsAddColumnOpen(true)
                 setIsChatOpen(false)
+                setIsCellDetailOpen(false)
               }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
             >
@@ -527,7 +539,7 @@ export function AnalysisGrid() {
                     Reason for rating
                   </div>
                 </th>
-                {!isAddColumnOpen && !isChatOpen && (
+                {!isAddColumnOpen && !isChatOpen && !isCellDetailOpen && (
                   <th
                     className="px-8 py-3.5 text-left bg-neutral-50/50"
                     style={{ minWidth: '200px' }}
@@ -536,6 +548,7 @@ export function AnalysisGrid() {
                       onClick={() => {
                         setIsAddColumnOpen(true)
                         setIsChatOpen(false)
+                        setIsCellDetailOpen(false)
                       }}
                       className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium"
                     >
@@ -613,7 +626,8 @@ export function AnalysisGrid() {
                   </td>
                   <td
                     id={`cell-${index}-diagnosis`}
-                    className={`px-8 py-4 transition-all duration-500 ${
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer hover:bg-neutral-50 ${
                       highlightedCell === `cell-${index}-diagnosis`
                         ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
                         : ''
@@ -633,7 +647,8 @@ export function AnalysisGrid() {
                   </td>
                   <td
                     id={`cell-${index}-unmetNeeds`}
-                    className={`px-8 py-4 transition-all duration-500 ${
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer hover:bg-neutral-50 ${
                       highlightedCell === `cell-${index}-unmetNeeds`
                         ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
                         : ''
@@ -671,7 +686,7 @@ export function AnalysisGrid() {
                       )}
                     </div>
                   </td>
-                  {!isAddColumnOpen && !isChatOpen && (
+                  {!isAddColumnOpen && !isChatOpen && !isCellDetailOpen && (
                     <td className="px-8 py-4">
                       {/* Empty cell for new column */}
                     </td>
@@ -681,6 +696,11 @@ export function AnalysisGrid() {
             </tbody>
           </table>
         </div>
+        {/* Cell Detail Sidebar on Right */}
+        <CellDetailSidebar
+          isOpen={isCellDetailOpen}
+          onClose={() => setIsCellDetailOpen(false)}
+        />
       </div>
     </div>
   )
