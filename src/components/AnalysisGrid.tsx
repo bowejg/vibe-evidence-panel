@@ -1,10 +1,45 @@
 import { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AddColumnSidebar } from './AddColumnSidebar'
+import { ChatSidebar } from './ChatSidebar'
 
 export function AnalysisGrid() {
   const [viewMode, setViewMode] = useState<'options' | 'table'>('options')
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [highlightedCell, setHighlightedCell] = useState<string | null>(null)
+
+  // Citation to cell mapping (citation number -> cell ID)
+  const citationMap: Record<string, string> = {
+    '1': 'cell-0-unmetNeeds',
+    '3': 'cell-0-diagnosis',
+    '4': 'cell-0-unmetNeeds',
+    '5': 'cell-1-unmetNeeds',
+    '6': 'cell-1-diagnosis',
+    '7': 'cell-2-unmetNeeds',
+    '8': 'cell-2-diagnosis',
+    '9': 'cell-2-unmetNeeds',
+    '11': 'cell-3-unmetNeeds',
+  }
+
+  const handleCitationClick = (citationNumber: string) => {
+    const cellId = citationMap[citationNumber]
+    if (!cellId) return
+
+    const element = document.getElementById(cellId)
+    if (!element) return
+
+    // Scroll to element smoothly
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center',
+    })
+
+    // Trigger highlight animation
+    setHighlightedCell(cellId)
+    setTimeout(() => setHighlightedCell(null), 2000)
+  }
 
   // Sample participant data
   const participants = [
@@ -272,7 +307,13 @@ export function AnalysisGrid() {
 
           {/* Right: Toolbar Buttons */}
           <div className="flex items-center gap-2">
-            <button className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-200 bg-white shadow-sm hover:bg-neutral-50 hover:border-neutral-300 transition-all">
+            <button
+              onClick={() => {
+                setIsChatOpen(true)
+                setIsAddColumnOpen(false)
+              }}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-200 bg-white shadow-sm hover:bg-neutral-50 hover:border-neutral-300 transition-all"
+            >
               <svg
                 className="w-4 h-4 text-neutral-600"
                 fill="none"
@@ -305,7 +346,10 @@ export function AnalysisGrid() {
               Add document
             </button>
             <button
-              onClick={() => setIsAddColumnOpen(true)}
+              onClick={() => {
+                setIsAddColumnOpen(true)
+                setIsChatOpen(false)
+              }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
             >
               <svg
@@ -345,7 +389,13 @@ export function AnalysisGrid() {
 
       {/* Table and Sidebar Container */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar on Left */}
+        {/* Chat Sidebar on Left */}
+        <ChatSidebar
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          onCitationClick={handleCitationClick}
+        />
+        {/* Add Column Sidebar on Left */}
         <AddColumnSidebar
           isOpen={isAddColumnOpen}
           onClose={() => setIsAddColumnOpen(false)}
@@ -477,12 +527,18 @@ export function AnalysisGrid() {
                     Reason for rating
                   </div>
                 </th>
-                {!isAddColumnOpen && (
+                {!isAddColumnOpen && !isChatOpen && (
                   <th
                     className="px-8 py-3.5 text-left bg-neutral-50/50"
                     style={{ minWidth: '200px' }}
                   >
-                    <button className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium">
+                    <button
+                      onClick={() => {
+                        setIsAddColumnOpen(true)
+                        setIsChatOpen(false)
+                      }}
+                      className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium"
+                    >
                       <svg
                         className="w-4 h-4"
                         fill="none"
@@ -555,7 +611,14 @@ export function AnalysisGrid() {
                       {participant.date}
                     </span>
                   </td>
-                  <td className="px-8 py-4">
+                  <td
+                    id={`cell-${index}-diagnosis`}
+                    className={`px-8 py-4 transition-all duration-500 ${
+                      highlightedCell === `cell-${index}-diagnosis`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
+                  >
                     <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
                       {participant.diagnosis}
                       {participant.diagnosisCitations.map((citation, idx) => (
@@ -568,7 +631,14 @@ export function AnalysisGrid() {
                       ))}
                     </div>
                   </td>
-                  <td className="px-8 py-4">
+                  <td
+                    id={`cell-${index}-unmetNeeds`}
+                    className={`px-8 py-4 transition-all duration-500 ${
+                      highlightedCell === `cell-${index}-unmetNeeds`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
+                  >
                     <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
                       {participant.unmetNeeds}
                       {participant.unmetNeedsCitations.map((citation, idx) => (
@@ -601,7 +671,7 @@ export function AnalysisGrid() {
                       )}
                     </div>
                   </td>
-                  {!isAddColumnOpen && (
+                  {!isAddColumnOpen && !isChatOpen && (
                     <td className="px-8 py-4">
                       {/* Empty cell for new column */}
                     </td>

@@ -52,7 +52,7 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
   return (
     <div
       className={`bg-white border-r border-neutral-200/60 flex flex-col flex-shrink-0 h-full overflow-hidden transition-all duration-300 ease-out ${
-        isOpen ? 'w-[480px] opacity-100' : 'w-0 opacity-0 border-r-0'
+        isOpen ? 'w-[576px] opacity-100' : 'w-0 opacity-0 border-r-0'
       }`}
     >
       {/* Header - Column Header Style */}
