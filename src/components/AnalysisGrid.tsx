@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
+import { AddColumnSidebar } from './AddColumnSidebar'
 
 export function AnalysisGrid() {
   const [viewMode, setViewMode] = useState<'options' | 'table'>('options')
+  const [isAddColumnOpen, setIsAddColumnOpen] = useState(false)
 
   // Sample participant data
   const participants = [
@@ -236,10 +238,11 @@ export function AnalysisGrid() {
 
   return (
     <div className="h-full flex flex-col bg-white">
+      {/* Header and Toolbar */}
       <div className="border-b border-neutral-200/60">
-        <div className="px-8 py-6">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
+        <div className="px-8 py-4 flex items-center justify-between">
+          {/* Left: Title */}
+          <div className="flex items-center gap-3">
             <div className="w-6 h-6 rounded bg-amber-500 flex items-center justify-center">
               <svg
                 className="w-4 h-4 text-white"
@@ -267,7 +270,7 @@ export function AnalysisGrid() {
             </svg>
           </div>
 
-          {/* Toolbar */}
+          {/* Right: Toolbar Buttons */}
           <div className="flex items-center gap-2">
             <button className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-200 bg-white shadow-sm hover:bg-neutral-50 hover:border-neutral-300 transition-all">
               <svg
@@ -301,7 +304,10 @@ export function AnalysisGrid() {
               </svg>
               Add document
             </button>
-            <button className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all">
+            <button
+              onClick={() => setIsAddColumnOpen(true)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
+            >
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -337,14 +343,20 @@ export function AnalysisGrid() {
         </div>
       </div>
 
-      {/* Table - Full Width */}
-      <div className="flex-1 overflow-auto">
-        <div>
+      {/* Table and Sidebar Container */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar on Left */}
+        <AddColumnSidebar
+          isOpen={isAddColumnOpen}
+          onClose={() => setIsAddColumnOpen(false)}
+        />
+        {/* Table Container - Scrollable */}
+        <div className="flex-1 overflow-auto min-w-0">
           <table className="w-full">
-            <thead className="sticky top-0 bg-white">
+            <thead className="sticky top-0 bg-white z-20">
               <tr className="border-b border-neutral-200/60">
                 <th
-                  className="px-8 py-3.5 text-left bg-neutral-50/50"
+                  className="sticky left-0 z-30 px-8 py-3.5 text-left bg-neutral-50 border-r border-neutral-200"
                   style={{ minWidth: '280px' }}
                 >
                   <div className="flex items-center gap-3">
@@ -377,7 +389,7 @@ export function AnalysisGrid() {
                 </th>
                 <th
                   className="px-8 py-3.5 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-50/50"
-                  style={{ minWidth: '170px' }}
+                  style={{ minWidth: '180px' }}
                 >
                   Interview Date
                 </th>
@@ -425,7 +437,7 @@ export function AnalysisGrid() {
                 </th>
                 <th
                   className="px-8 py-3.5 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-50/50"
-                  style={{ minWidth: '210px' }}
+                  style={{ minWidth: '220px' }}
                 >
                   <div className="flex items-center gap-2">
                     <svg
@@ -465,27 +477,29 @@ export function AnalysisGrid() {
                     Reason for rating
                   </div>
                 </th>
-                <th
-                  className="px-8 py-3.5 text-left bg-neutral-50/50"
-                  style={{ minWidth: '200px' }}
-                >
-                  <button className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                    New column
-                  </button>
-                </th>
+                {!isAddColumnOpen && (
+                  <th
+                    className="px-8 py-3.5 text-left bg-neutral-50/50"
+                    style={{ minWidth: '200px' }}
+                  >
+                    <button className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-600 transition-colors text-sm font-medium">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                      New column
+                    </button>
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
@@ -494,7 +508,7 @@ export function AnalysisGrid() {
                   key={participant.id}
                   className="group hover:bg-neutral-50/50 transition-colors"
                 >
-                  <td className="px-8 py-4">
+                  <td className="sticky left-0 z-10 px-8 py-4 bg-white group-hover:bg-neutral-50/50 border-r border-neutral-200">
                     <div className="flex items-center gap-3">
                       <div className="relative w-4 h-4">
                         <span className="absolute inset-0 flex items-center justify-center text-sm text-neutral-500 font-medium group-hover:opacity-0 transition-opacity">
@@ -581,9 +595,11 @@ export function AnalysisGrid() {
                       )}
                     </div>
                   </td>
-                  <td className="px-8 py-4">
-                    {/* Empty cell for new column */}
-                  </td>
+                  {!isAddColumnOpen && (
+                    <td className="px-8 py-4">
+                      {/* Empty cell for new column */}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
