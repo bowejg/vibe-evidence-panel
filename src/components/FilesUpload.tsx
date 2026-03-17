@@ -341,7 +341,8 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
                         className={`text-xs ${currentStep >= 2 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 2 ? 'mb-2' : ''}`}
                       >
                         <span className="font-medium">7 keywords</span>{' '}
-                        extracted from your discussion guide
+                        extracted from your discussion guide. These are used to
+                        improve transcription
                       </p>
                       {currentStep === 2 && (
                         <div className="flex items-center gap-2">

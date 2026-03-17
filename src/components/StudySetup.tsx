@@ -665,10 +665,10 @@ export function StudySetup() {
                             onCheckedChange={handleSelectAll}
                           />
                         </th>
-                        <th className="w-[16%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                        <th className="w-[20%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
                           File Name
                         </th>
-                        <th className="w-[8%] pb-3 text-left">
+                        <th className="w-[15%] pb-3 text-left">
                           <div className="relative inline-block">
                             <button
                               onClick={(e) => {
@@ -737,31 +737,13 @@ export function StudySetup() {
                             )}
                           </div>
                         </th>
-                        <th className="w-[8%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                        <th className="w-[12%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
                           Original Language
                         </th>
-                        <th className="w-[50%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                          <div className="flex items-center gap-2">
-                            <span>Segments</span>
-                            <button className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-xs font-medium hover:bg-purple-100 hover:border-purple-300 transition-colors normal-case">
-                              <svg
-                                className="w-3 h-3"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                                />
-                              </svg>
-                              Automations
-                            </button>
-                          </div>
+                        <th className="w-[45%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                          Segments
                         </th>
-                        <th className="pb-3 text-right pr-4 text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                        <th className="w-[14%] pb-3 text-right pr-4 text-xs font-medium text-neutral-500 uppercase tracking-wide">
                           Status
                         </th>
                         <th className="w-12 pb-3"></th>
@@ -786,10 +768,10 @@ export function StudySetup() {
                               className="opacity-60 group-hover:opacity-100 transition-opacity"
                             />
                           </td>
-                          <td className="w-[16%] py-4 pr-6 text-sm font-medium text-neutral-900">
+                          <td className="w-[20%] py-4 pr-6 text-sm font-medium text-neutral-900">
                             {interview.fileName}
                           </td>
-                          <td className="w-[8%] py-4 pr-4">
+                          <td className="w-[15%] py-4 pr-4">
                             {processedFiles.includes(interview.id) ? (
                               <span className="text-sm text-neutral-700">
                                 {fileParticipants[interview.id]}
@@ -806,7 +788,7 @@ export function StudySetup() {
                               </select>
                             )}
                           </td>
-                          <td className="w-[8%] py-4 pr-6">
+                          <td className="w-[12%] py-4 pr-6">
                             {processedFiles.includes(interview.id) ? (
                               <span className="text-sm text-neutral-700">
                                 en-US
@@ -823,7 +805,7 @@ export function StudySetup() {
                               </select>
                             )}
                           </td>
-                          <td className="w-[50%] py-4 pr-6">
+                          <td className="w-[45%] py-4 pr-6">
                             <div className="flex flex-wrap gap-2">
                               {/* Confirmed segments */}
                               {interview.segments.confirmed.map(
@@ -880,7 +862,7 @@ export function StudySetup() {
                               </button>
                             </div>
                           </td>
-                          <td className="py-4 text-right pr-4">
+                          <td className="w-[14%] py-4 text-right pr-4">
                             {processedFiles.includes(interview.id) ? (
                               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-medium">
                                 <svg
@@ -1308,7 +1290,8 @@ export function StudySetup() {
                       className={`text-xs ${currentStep >= 2 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 2 ? 'mb-2' : ''}`}
                     >
                       <span className="font-medium">7 keywords</span> extracted
-                      from your discussion guide
+                      from your discussion guide. These are used to improve
+                      transcription.
                     </p>
                     {currentStep === 2 && (
                       <div className="flex items-center gap-2">
@@ -1562,12 +1545,52 @@ export function StudySetup() {
                   project.
                 </p>
               </div>
-              <button
-                onClick={handleAddFilesClick}
-                className="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 shadow-sm"
-              >
-                + Add Files
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={handleAddFilesClick}
+                  className="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 shadow-sm"
+                >
+                  + Add Files
+                </button>
+                <button
+                  onClick={() => console.log('Link calendar')}
+                  className="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 shadow-sm flex items-center justify-center gap-2"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Link Calendar
+                </button>
+                <button
+                  onClick={() => console.log('Record live meeting')}
+                  className="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 shadow-sm flex items-center justify-center gap-2"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Record Live Meeting
+                </button>
+              </div>
             </div>
           </div>
         </div>

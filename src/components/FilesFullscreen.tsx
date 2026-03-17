@@ -74,25 +74,25 @@ export function FilesFullscreen({
       <div className="flex-1 overflow-auto bg-neutral-50/30">
         <div className="px-8 py-6">
           <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm overflow-hidden">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead>
                 <tr className="border-b border-neutral-200/60 bg-neutral-50/50">
-                  <th className="px-6 py-3 text-left">
+                  <th className="w-12 px-6 py-3 text-left">
                     <Checkbox />
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+                  <th className="w-[20%] px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                     File Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+                  <th className="w-[15%] px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                     Speakers
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+                  <th className="w-[12%] px-8 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                     Original Language
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+                  <th className="w-[45%] px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                     Segments
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+                  <th className="w-[14%] px-6 py-3 text-right text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                     Status
                   </th>
                   <th className="w-12 px-6 py-3"></th>
@@ -104,13 +104,13 @@ export function FilesFullscreen({
                     key={interview.id}
                     className="group hover:bg-neutral-50/50 transition-colors"
                   >
-                    <td className="px-6 py-4">
+                    <td className="w-12 px-6 py-4">
                       <Checkbox />
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium text-neutral-900">
+                    <td className="w-[20%] px-6 py-4 text-sm font-medium text-neutral-900">
                       {interview.fileName}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="w-[15%] px-6 py-4">
                       {processedFiles.includes(interview.id) ? (
                         <span className="text-sm text-neutral-700">
                           {fileParticipants[interview.id]}
@@ -127,7 +127,7 @@ export function FilesFullscreen({
                         </select>
                       )}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="w-[12%] px-6 py-4">
                       {processedFiles.includes(interview.id) ? (
                         <span className="text-sm text-neutral-700">en-US</span>
                       ) : (
@@ -142,7 +142,7 @@ export function FilesFullscreen({
                         </select>
                       )}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="w-[45%] px-6 py-4">
                       <div className="flex flex-wrap gap-2">
                         {/* Confirmed segments */}
                         {interview.segments.confirmed.map((segment, idx) => (
@@ -195,7 +195,7 @@ export function FilesFullscreen({
                         </button>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="w-[14%] px-6 py-4 text-right">
                       {processedFiles.includes(interview.id) ? (
                         <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-medium">
                           <svg
