@@ -17,6 +17,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { SegmentsReview } from './SegmentsReview'
 import { FilesFullscreen } from './FilesFullscreen'
 import { toast } from 'sonner'
@@ -33,6 +41,12 @@ export function StudySetup() {
   const [processingFiles, setProcessingFiles] = useState<number[]>([])
   const [processedFiles, setProcessedFiles] = useState<number[]>([])
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
+  const [openColumnDropdown, setOpenColumnDropdown] = useState<string | null>(
+    null,
+  )
+  const [currentStep, setCurrentStep] = useState(2) // Track current stepper step (1-5)
+  const [isTranscribeModalOpen, setIsTranscribeModalOpen] = useState(false)
+  const [transcribeFileId, setTranscribeFileId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Map of file IDs to participant names
@@ -254,6 +268,16 @@ export function StudySetup() {
     fileInputRef.current?.click()
   }
 
+  const handleSkipStep = () => {
+    if (currentStep < 5) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  // Calculate progress based on current step (each step is 20%)
+  const completedSteps = currentStep - 1
+  const progressPercentage = (completedSteps / 5) * 100
+
   // Process files with random delay (2-4 seconds) in parallel
   useEffect(() => {
     const timers: NodeJS.Timeout[] = []
@@ -293,6 +317,20 @@ export function StudySetup() {
     }
   }, [openMenuId])
 
+  // Close column dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (openColumnDropdown !== null) {
+        setOpenColumnDropdown(null)
+      }
+    }
+
+    if (openColumnDropdown !== null) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [openColumnDropdown])
+
   const handleSelectAll = () => {
     if (selectedFiles.length === uploadedInterviews.length) {
       setSelectedFiles([])
@@ -311,6 +349,36 @@ export function StudySetup() {
 
   const isAllSelected = selectedFiles.length === uploadedInterviews.length
   const isSomeSelected = selectedFiles.length > 0
+
+  const handleShowTranscribeModal = (fileId: number) => {
+    setTranscribeFileId(fileId)
+    setIsTranscribeModalOpen(true)
+  }
+
+  const handleConfirmTranscribe = () => {
+    if (transcribeFileId) {
+      // Move file to processing state
+      setProcessingFiles([...processingFiles, transcribeFileId])
+
+      // Close modal
+      setIsTranscribeModalOpen(false)
+      setTranscribeFileId(null)
+
+      // Show toast with reminder option
+      toast.success('Processing file', {
+        description: 'Your file is being transcribed and processed.',
+        action: {
+          label: 'Remind me',
+          onClick: () => {
+            toast.info('Reminder set', {
+              description: "We'll notify you when processing is complete.",
+            })
+          },
+        },
+        duration: 5000,
+      })
+    }
+  }
 
   const handleConfirmSelected = () => {
     const fileCount = selectedFiles.length
@@ -492,85 +560,12 @@ export function StudySetup() {
                         onClick={handleConfirmSelected}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-colors shadow-sm"
                       >
-                        <svg
-                          className="w-3.5 h-3.5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2.5}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        Confirm Selected
+                        Transcribe Selected
                       </button>
                     </div>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
-                    {/* Filter */}
-                    <button
-                      className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-                      title="Filter"
-                    >
-                      <svg
-                        className="w-4 h-4 text-neutral-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                        />
-                      </svg>
-                    </button>
-
-                    {/* Sort */}
-                    <button
-                      className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-                      title="Sort"
-                    >
-                      <svg
-                        className="w-4 h-4 text-neutral-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                        />
-                      </svg>
-                    </button>
-
-                    {/* Automations */}
-                    <button
-                      className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-                      title="Automations"
-                    >
-                      <svg
-                        className="w-4 h-4 text-neutral-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                    </button>
-
                     {/* Search */}
                     <button
                       className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
@@ -670,16 +665,82 @@ export function StudySetup() {
                             onCheckedChange={handleSelectAll}
                           />
                         </th>
-                        <th className="w-[18%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                        <th className="w-[16%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
                           File Name
                         </th>
-                        <th className="w-[10%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                          Participants
+                        <th className="w-[8%] pb-3 text-left">
+                          <div className="relative inline-block">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setOpenColumnDropdown(
+                                  openColumnDropdown === 'speakers'
+                                    ? null
+                                    : 'speakers',
+                                )
+                              }}
+                              className="text-xs font-medium text-neutral-500 uppercase tracking-wide hover:text-neutral-900 hover:bg-neutral-100 px-2 py-1 -mx-2 -my-1 rounded transition-colors"
+                            >
+                              Speakers
+                            </button>
+                            {openColumnDropdown === 'speakers' && (
+                              <div className="absolute left-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-20">
+                                <button className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                                    />
+                                  </svg>
+                                  Filter
+                                </button>
+                                <button className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                                    />
+                                  </svg>
+                                  Sort
+                                </button>
+                                <button className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                                    />
+                                  </svg>
+                                  Automations
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </th>
-                        <th className="w-[10%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                          Language
+                        <th className="w-[8%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                          Original Language
                         </th>
-                        <th className="w-[42%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                        <th className="w-[50%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
                           <div className="flex items-center gap-2">
                             <span>Segments</span>
                             <button className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-xs font-medium hover:bg-purple-100 hover:border-purple-300 transition-colors normal-case">
@@ -725,10 +786,10 @@ export function StudySetup() {
                               className="opacity-60 group-hover:opacity-100 transition-opacity"
                             />
                           </td>
-                          <td className="w-[18%] py-4 pr-6 text-sm font-medium text-neutral-900">
+                          <td className="w-[16%] py-4 pr-6 text-sm font-medium text-neutral-900">
                             {interview.fileName}
                           </td>
-                          <td className="w-[10%] py-4 pr-4">
+                          <td className="w-[8%] py-4 pr-4">
                             {processedFiles.includes(interview.id) ? (
                               <span className="text-sm text-neutral-700">
                                 {fileParticipants[interview.id]}
@@ -745,7 +806,7 @@ export function StudySetup() {
                               </select>
                             )}
                           </td>
-                          <td className="w-[10%] py-4 pr-6">
+                          <td className="w-[8%] py-4 pr-6">
                             {processedFiles.includes(interview.id) ? (
                               <span className="text-sm text-neutral-700">
                                 en-US
@@ -762,7 +823,7 @@ export function StudySetup() {
                               </select>
                             )}
                           </td>
-                          <td className="w-[42%] py-4 pr-6">
+                          <td className="w-[50%] py-4 pr-6">
                             <div className="flex flex-wrap gap-2">
                               {/* Confirmed segments */}
                               {interview.segments.confirmed.map(
@@ -855,21 +916,13 @@ export function StudySetup() {
                                 Processing
                               </div>
                             ) : (
-                              <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-neutral-200 text-neutral-700 text-xs font-medium hover:bg-neutral-50 hover:border-neutral-300 transition-colors shadow-sm">
-                                <svg
-                                  className="w-3.5 h-3.5"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2.5}
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                                Confirm
+                              <button
+                                onClick={() =>
+                                  handleShowTranscribeModal(interview.id)
+                                }
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-neutral-200 text-neutral-700 text-xs font-medium hover:bg-neutral-50 hover:border-neutral-300 transition-colors shadow-sm"
+                              >
+                                Transcribe
                               </button>
                             )}
                           </td>
@@ -1134,7 +1187,7 @@ export function StudySetup() {
           {/* Context Options Card */}
           <div className="bg-white rounded-xl shadow-sm border border-neutral-200/60 overflow-hidden hover:shadow-md transition-shadow duration-200">
             <div className="p-6 space-y-5">
-              <div className="space-y-1.5">
+              <div className="space-y-3">
                 <h3 className="text-base font-semibold text-neutral-900 tracking-tight">
                   Get more accurate analysis?
                 </h3>
@@ -1142,35 +1195,54 @@ export function StudySetup() {
                   Add in as much of the context below to get deeper more
                   specific insights with higher accuracy results
                 </p>
+
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-neutral-600">
+                      Setup Progress
+                    </span>
+                    <span className="font-semibold text-neutral-900">
+                      {completedSteps}/5 Complete
+                    </span>
+                  </div>
+                  <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                      style={{ width: `${progressPercentage}%` }}
+                    ></div>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                {/* Discussion Guide - Completed */}
-                <div className="w-full p-3.5 rounded-lg bg-neutral-50/50 border border-transparent">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Discussion Guide
-                      </div>
-                      <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm flex-shrink-0">
-                        <svg
-                          className="w-2.5 h-2.5 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2.5}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </div>
+              <div className="space-y-0 relative">
+                {/* Vertical connector line */}
+                <div className="absolute left-[18px] top-10 bottom-10 w-px bg-neutral-200"></div>
+
+                {/* Step 1: Discussion Guide - Completed */}
+                <div className="relative flex gap-3 pb-6">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm z-10">
+                    <svg
+                      className="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <div className="font-medium text-sm text-neutral-900 mb-1">
+                      Discussion Guide
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mb-2">
                       <svg
-                        className="w-4 h-4 text-red-500 flex-shrink-0"
+                        className="w-3.5 h-3.5 text-red-500 flex-shrink-0"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
@@ -1191,98 +1263,287 @@ export function StudySetup() {
                   </div>
                 </div>
 
-                {/* Recruitment Grid - Not Uploaded */}
-                <div className="w-full p-3.5 rounded-lg border border-transparent">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Recruitment Grid
-                      </div>
-                      <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
+                {/* Step 2: Transcription Keywords - Current/Active */}
+                <div className="relative flex gap-3 pb-6">
+                  <div
+                    className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                      currentStep > 2
+                        ? 'bg-emerald-500'
+                        : currentStep === 2
+                          ? 'bg-blue-600'
+                          : 'bg-neutral-200'
+                    }`}
+                  >
+                    {currentStep > 2 ? (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className={`text-sm font-semibold ${currentStep === 2 ? 'text-white' : 'text-neutral-500'}`}
+                      >
+                        2
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={`flex-1 pt-1 ${currentStep === 2 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : currentStep < 2 ? 'opacity-50' : ''}`}
+                  >
+                    <div
+                      className={`font-medium text-sm ${currentStep >= 2 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                    >
+                      Transcription Keywords
                     </div>
-                    <p className="text-xs text-neutral-600">
+                    <p
+                      className={`text-xs ${currentStep >= 2 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 2 ? 'mb-2' : ''}`}
+                    >
+                      <span className="font-medium">7 keywords</span> extracted
+                      from your discussion guide
+                    </p>
+                    {currentStep === 2 && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => console.log('Review keywords')}
+                          className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                        >
+                          Review Keywords
+                        </button>
+                        <span className="text-xs text-neutral-400">or</span>
+                        <button
+                          onClick={handleSkipStep}
+                          className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                        >
+                          Skip for now
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Step 3: Concepts */}
+                <div
+                  className={`relative flex gap-3 pb-6 ${currentStep < 3 ? 'opacity-50' : ''}`}
+                >
+                  <div
+                    className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                      currentStep > 3
+                        ? 'bg-emerald-500'
+                        : currentStep === 3
+                          ? 'bg-blue-600'
+                          : 'bg-neutral-200'
+                    }`}
+                  >
+                    {currentStep > 3 ? (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className={`text-sm font-semibold ${currentStep === 3 ? 'text-white' : 'text-neutral-500'}`}
+                      >
+                        3
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={`flex-1 pt-1 ${currentStep === 3 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : ''}`}
+                  >
+                    <div
+                      className={`font-medium text-sm ${currentStep >= 3 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                    >
+                      Concepts
+                    </div>
+                    <p
+                      className={`text-xs ${currentStep >= 3 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 3 ? 'mb-2' : ''}`}
+                    >
+                      <span className="font-medium">3 concepts</span> extracted
+                      from your discussion guide
+                    </p>
+                    {currentStep === 3 && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => console.log('Review concepts')}
+                          className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                        >
+                          Review Concepts
+                        </button>
+                        <span className="text-xs text-neutral-400">or</span>
+                        <button
+                          onClick={handleSkipStep}
+                          className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                        >
+                          Skip for now
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Step 4: Recruitment Grid */}
+                <div
+                  className={`relative flex gap-3 pb-6 ${currentStep < 4 ? 'opacity-50' : ''}`}
+                >
+                  <div
+                    className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                      currentStep > 4
+                        ? 'bg-emerald-500'
+                        : currentStep === 4
+                          ? 'bg-blue-600'
+                          : 'bg-neutral-200'
+                    }`}
+                  >
+                    {currentStep > 4 ? (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className={`text-sm font-semibold ${currentStep === 4 ? 'text-white' : 'text-neutral-500'}`}
+                      >
+                        4
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={`flex-1 pt-1 ${currentStep === 4 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : ''}`}
+                  >
+                    <div
+                      className={`font-medium text-sm ${currentStep >= 4 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                    >
+                      Recruitment Grid
+                    </div>
+                    <p
+                      className={`text-xs ${currentStep >= 4 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 4 ? 'mb-2' : ''}`}
+                    >
                       Upload your recruitment grid to improve participant
                       segmentation and analysis accuracy
                     </p>
-                    <button
-                      onClick={() => console.log('Upload recruitment grid')}
-                      className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                    >
-                      + Upload Grid
-                    </button>
+                    {currentStep === 4 && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => console.log('Upload recruitment grid')}
+                          className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                        >
+                          + Upload Grid
+                        </button>
+                        <span className="text-xs text-neutral-400">or</span>
+                        <button
+                          onClick={handleSkipStep}
+                          className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                        >
+                          Skip for now
+                        </button>
+                      </div>
+                    )}
+                    {currentStep > 4 && (
+                      <button
+                        onClick={() =>
+                          console.log('Add another recruitment grid')
+                        }
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        + Add another
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {/* Segments - Needs Review */}
-                <div className="w-full p-3.5 rounded-lg border border-transparent">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Segments
-                      </div>
-                      <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
-                    </div>
-                    <p className="text-xs text-neutral-600">
-                      <span className="font-medium text-neutral-900">
-                        4 segments
-                      </span>{' '}
-                      extracted from your discussion guide
-                    </p>
-                    <button
-                      onClick={() => setIsSegmentsReviewOpen(true)}
-                      className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                    >
-                      Review & Confirm →
-                    </button>
+                {/* Step 5: Segments */}
+                <div
+                  className={`relative flex gap-3 ${currentStep < 5 ? 'opacity-50' : ''}`}
+                >
+                  <div
+                    className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                      currentStep > 5
+                        ? 'bg-emerald-500'
+                        : currentStep === 5
+                          ? 'bg-blue-600'
+                          : 'bg-neutral-200'
+                    }`}
+                  >
+                    {currentStep > 5 ? (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className={`text-sm font-semibold ${currentStep === 5 ? 'text-white' : 'text-neutral-500'}`}
+                      >
+                        5
+                      </span>
+                    )}
                   </div>
-                </div>
-
-                {/* Keywords - Needs Review */}
-                <div className="w-full p-3.5 rounded-lg border border-transparent">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Keywords
-                      </div>
-                      <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
-                    </div>
-                    <p className="text-xs text-neutral-600">
-                      <span className="font-medium text-neutral-900">
-                        7 keywords
-                      </span>{' '}
-                      extracted from your discussion guide. These will be used
-                      to enhance transcription quality.
-                    </p>
-                    <button
-                      onClick={() => console.log('Review keywords')}
-                      className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  <div
+                    className={`flex-1 pt-1 ${currentStep === 5 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : ''}`}
+                  >
+                    <div
+                      className={`font-medium text-sm ${currentStep >= 5 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
                     >
-                      Review & Confirm →
-                    </button>
-                  </div>
-                </div>
-
-                {/* Concepts - Needs Review */}
-                <div className="w-full p-3.5 rounded-lg border border-transparent">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Concepts
-                      </div>
-                      <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
+                      Segments
                     </div>
-                    <p className="text-xs text-neutral-600">
-                      <span className="font-medium text-neutral-900">
-                        3 concepts
-                      </span>{' '}
-                      extracted from your discussion guide
-                    </p>
-                    <button
-                      onClick={() => console.log('Review concepts')}
-                      className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                    <p
+                      className={`text-xs ${currentStep >= 5 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 5 ? 'mb-2' : ''}`}
                     >
-                      Review & Confirm →
-                    </button>
+                      <span className="font-medium">4 segments</span> extracted
+                      from your discussion guide
+                    </p>
+                    {currentStep === 5 && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setIsSegmentsReviewOpen(true)}
+                          className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                        >
+                          Review Segments
+                        </button>
+                        <span className="text-xs text-neutral-400">or</span>
+                        <button
+                          onClick={handleSkipStep}
+                          className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                        >
+                          Skip for now
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1327,6 +1588,141 @@ export function StudySetup() {
         processedFiles={processedFiles}
         fileParticipants={fileParticipants}
       />
+
+      {/* Transcribe Confirmation Modal */}
+      <Dialog
+        open={isTranscribeModalOpen}
+        onOpenChange={setIsTranscribeModalOpen}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-neutral-900 tracking-tight">
+              Confirm Transcription
+            </DialogTitle>
+            <DialogDescription className="text-sm text-neutral-600">
+              You are about to transcribe this file. Please review the
+              information below and confirm.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-5 py-2">
+            {/* Tip */}
+            <div className="bg-blue-50/50 border border-blue-200/60 rounded-xl p-4">
+              <div className="flex gap-3">
+                <svg
+                  className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div className="flex-1 space-y-2">
+                  <p className="text-sm font-semibold text-blue-900">
+                    Faster processing tip
+                  </p>
+                  <p className="text-sm text-blue-700 leading-relaxed">
+                    Use the checkboxes to select multiple files and bulk actions
+                    to transcribe them all at once.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsTranscribeModalOpen(false)
+                      setTranscribeFileId(null)
+                      // Select all files to demonstrate bulk action
+                      setSelectedFiles(
+                        uploadedInterviews.map((interview) => interview.id),
+                      )
+                    }}
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 underline underline-offset-2 transition-colors"
+                  >
+                    Show me
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* File Information */}
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                  Number of Speakers
+                </label>
+                <div className="text-sm text-neutral-900 font-medium">2</div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                  Original Language
+                </label>
+                <div className="text-sm text-neutral-900 font-medium">
+                  en-US
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                  Transcription Keywords
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Tauopathy',
+                    'PSP',
+                    'TAU Pos',
+                    'PSP-P',
+                    'CBD-CBS',
+                    '4R-Tau',
+                    'Parkinsonism',
+                  ].map((keyword) => (
+                    <span
+                      key={keyword}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-700 text-xs font-medium hover:bg-neutral-200 transition-colors cursor-default"
+                    >
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
+                  Concepts
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {['Product A', 'Product B', 'Product C'].map((concept) => (
+                    <span
+                      key={concept}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-700 text-xs font-medium hover:bg-neutral-200 transition-colors cursor-default"
+                    >
+                      {concept}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <button
+              onClick={() => setIsTranscribeModalOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmTranscribe}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
+            >
+              Confirm & Transcribe
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -9,6 +9,7 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [showAllSegments, setShowAllSegments] = useState(false)
   const [showAllKeywords, setShowAllKeywords] = useState(false)
+  const [currentStep, setCurrentStep] = useState(2) // Track current stepper step (1-5)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const description =
@@ -59,6 +60,16 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
   const handleAddFilesClick = () => {
     fileInputRef.current?.click()
   }
+
+  const handleSkipStep = () => {
+    if (currentStep < 5) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  // Calculate progress based on current step (each step is 20%)
+  const completedSteps = currentStep - 1
+  const progressPercentage = (completedSteps / 5) * 100
 
   return (
     <div className="h-full overflow-y-auto">
@@ -209,7 +220,7 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
             {/* Context Options Card */}
             <div className="bg-white rounded-xl shadow-sm border border-neutral-200/60 overflow-hidden hover:shadow-md transition-shadow duration-200">
               <div className="p-6 space-y-5">
-                <div className="space-y-1.5">
+                <div className="space-y-3">
                   <h3 className="text-base font-semibold text-neutral-900 tracking-tight">
                     Get more accurate analysis?
                   </h3>
@@ -217,35 +228,54 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
                     Add in as much of the context below to get deeper more
                     specific insights with higher accuracy results
                   </p>
+
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-medium text-neutral-600">
+                        Setup Progress
+                      </span>
+                      <span className="font-semibold text-neutral-900">
+                        {completedSteps}/5 Complete
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                        style={{ width: `${progressPercentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  {/* Discussion Guide - Completed */}
-                  <div className="w-full p-3.5 rounded-lg bg-neutral-50/50 border border-transparent">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="font-medium text-sm text-neutral-900">
-                          Discussion Guide
-                        </div>
-                        <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm flex-shrink-0">
-                          <svg
-                            className="w-2.5 h-2.5 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2.5}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
+                <div className="space-y-0 relative">
+                  {/* Vertical connector line */}
+                  <div className="absolute left-[18px] top-10 bottom-10 w-px bg-neutral-200"></div>
+
+                  {/* Step 1: Discussion Guide - Completed */}
+                  <div className="relative flex gap-3 pb-6">
+                    <div className="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm z-10">
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1 pt-1">
+                      <div className="font-medium text-sm text-neutral-900 mb-1">
+                        Discussion Guide
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 mb-2">
                         <svg
-                          className="w-4 h-4 text-red-500 flex-shrink-0"
+                          className="w-3.5 h-3.5 text-red-500 flex-shrink-0"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -266,98 +296,289 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
                     </div>
                   </div>
 
-                  {/* Recruitment Grid - Not Uploaded */}
-                  <div className="w-full p-3.5 rounded-lg border border-transparent">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="font-medium text-sm text-neutral-900">
-                          Recruitment Grid
-                        </div>
-                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
+                  {/* Step 2: Transcription Keywords - Current/Active */}
+                  <div className="relative flex gap-3 pb-6">
+                    <div
+                      className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                        currentStep > 2
+                          ? 'bg-emerald-500'
+                          : currentStep === 2
+                            ? 'bg-blue-600'
+                            : 'bg-neutral-200'
+                      }`}
+                    >
+                      {currentStep > 2 ? (
+                        <svg
+                          className="w-4 h-4 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : (
+                        <span
+                          className={`text-sm font-semibold ${currentStep === 2 ? 'text-white' : 'text-neutral-500'}`}
+                        >
+                          2
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className={`flex-1 pt-1 ${currentStep === 2 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : currentStep < 2 ? 'opacity-50' : ''}`}
+                    >
+                      <div
+                        className={`font-medium text-sm ${currentStep >= 2 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                      >
+                        Transcription Keywords
                       </div>
-                      <p className="text-xs text-neutral-600">
+                      <p
+                        className={`text-xs ${currentStep >= 2 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 2 ? 'mb-2' : ''}`}
+                      >
+                        <span className="font-medium">7 keywords</span>{' '}
+                        extracted from your discussion guide
+                      </p>
+                      {currentStep === 2 && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => console.log('Review keywords')}
+                            className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                          >
+                            Review Keywords
+                          </button>
+                          <span className="text-xs text-neutral-400">or</span>
+                          <button
+                            onClick={handleSkipStep}
+                            className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                          >
+                            Skip for now
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Step 3: Concepts */}
+                  <div
+                    className={`relative flex gap-3 pb-6 ${currentStep < 3 ? 'opacity-50' : ''}`}
+                  >
+                    <div
+                      className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                        currentStep > 3
+                          ? 'bg-emerald-500'
+                          : currentStep === 3
+                            ? 'bg-blue-600'
+                            : 'bg-neutral-200'
+                      }`}
+                    >
+                      {currentStep > 3 ? (
+                        <svg
+                          className="w-4 h-4 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : (
+                        <span
+                          className={`text-sm font-semibold ${currentStep === 3 ? 'text-white' : 'text-neutral-500'}`}
+                        >
+                          3
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className={`flex-1 pt-1 ${currentStep === 3 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : ''}`}
+                    >
+                      <div
+                        className={`font-medium text-sm ${currentStep >= 3 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                      >
+                        Concepts
+                      </div>
+                      <p
+                        className={`text-xs ${currentStep >= 3 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 3 ? 'mb-2' : ''}`}
+                      >
+                        <span className="font-medium">3 concepts</span>{' '}
+                        extracted from your discussion guide
+                      </p>
+                      {currentStep === 3 && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => console.log('Review concepts')}
+                            className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                          >
+                            Review Concepts
+                          </button>
+                          <span className="text-xs text-neutral-400">or</span>
+                          <button
+                            onClick={handleSkipStep}
+                            className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                          >
+                            Skip for now
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Step 4: Recruitment Grid */}
+                  <div
+                    className={`relative flex gap-3 pb-6 ${currentStep < 4 ? 'opacity-50' : ''}`}
+                  >
+                    <div
+                      className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                        currentStep > 4
+                          ? 'bg-emerald-500'
+                          : currentStep === 4
+                            ? 'bg-blue-600'
+                            : 'bg-neutral-200'
+                      }`}
+                    >
+                      {currentStep > 4 ? (
+                        <svg
+                          className="w-4 h-4 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : (
+                        <span
+                          className={`text-sm font-semibold ${currentStep === 4 ? 'text-white' : 'text-neutral-500'}`}
+                        >
+                          4
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className={`flex-1 pt-1 ${currentStep === 4 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : ''}`}
+                    >
+                      <div
+                        className={`font-medium text-sm ${currentStep >= 4 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                      >
+                        Recruitment Grid
+                      </div>
+                      <p
+                        className={`text-xs ${currentStep >= 4 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 4 ? 'mb-2' : ''}`}
+                      >
                         Upload your recruitment grid to improve participant
                         segmentation and analysis accuracy
                       </p>
-                      <button
-                        onClick={() => console.log('Upload recruitment grid')}
-                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                      >
-                        + Upload Grid
-                      </button>
+                      {currentStep === 4 && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() =>
+                              console.log('Upload recruitment grid')
+                            }
+                            className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                          >
+                            + Upload Grid
+                          </button>
+                          <span className="text-xs text-neutral-400">or</span>
+                          <button
+                            onClick={handleSkipStep}
+                            className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                          >
+                            Skip for now
+                          </button>
+                        </div>
+                      )}
+                      {currentStep > 4 && (
+                        <button
+                          onClick={() =>
+                            console.log('Add another recruitment grid')
+                          }
+                          className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                        >
+                          + Add another
+                        </button>
+                      )}
                     </div>
                   </div>
 
-                  {/* Segments - Needs Review */}
-                  <div className="w-full p-3.5 rounded-lg border border-transparent">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="font-medium text-sm text-neutral-900">
-                          Segments
-                        </div>
-                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
+                  {/* Step 5: Segments */}
+                  <div
+                    className={`relative flex gap-3 ${currentStep < 5 ? 'opacity-50' : ''}`}
+                  >
+                    <div
+                      className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm z-10 ${
+                        currentStep > 5
+                          ? 'bg-emerald-500'
+                          : currentStep === 5
+                            ? 'bg-blue-600'
+                            : 'bg-neutral-200'
+                      }`}
+                    >
+                      {currentStep > 5 ? (
+                        <svg
+                          className="w-4 h-4 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : (
+                        <span
+                          className={`text-sm font-semibold ${currentStep === 5 ? 'text-white' : 'text-neutral-500'}`}
+                        >
+                          5
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className={`flex-1 pt-1 ${currentStep === 5 ? 'p-3 rounded-lg bg-blue-50 border border-blue-200' : ''}`}
+                    >
+                      <div
+                        className={`font-medium text-sm ${currentStep >= 5 ? 'text-neutral-900' : 'text-neutral-500'} mb-1`}
+                      >
+                        Segments
                       </div>
-                      <p className="text-xs text-neutral-600">
-                        <span className="font-medium text-neutral-900">
-                          4 segments
-                        </span>{' '}
+                      <p
+                        className={`text-xs ${currentStep >= 5 ? 'text-neutral-600' : 'text-neutral-400'} ${currentStep === 5 ? 'mb-2' : ''}`}
+                      >
+                        <span className="font-medium">4 segments</span>{' '}
                         extracted from your discussion guide
                       </p>
-                      <button
-                        onClick={() => console.log('Review segments')}
-                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                      >
-                        Review & Confirm →
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Keywords - Needs Review */}
-                  <div className="w-full p-3.5 rounded-lg border border-transparent">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="font-medium text-sm text-neutral-900">
-                          Keywords
+                      {currentStep === 5 && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => console.log('Review segments')}
+                            className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                          >
+                            Review Segments
+                          </button>
+                          <span className="text-xs text-neutral-400">or</span>
+                          <button
+                            onClick={handleSkipStep}
+                            className="text-xs text-neutral-500 hover:text-neutral-700 font-medium transition-colors"
+                          >
+                            Skip for now
+                          </button>
                         </div>
-                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
-                      </div>
-                      <p className="text-xs text-neutral-600">
-                        <span className="font-medium text-neutral-900">
-                          7 keywords
-                        </span>{' '}
-                        extracted from your discussion guide. These will be used
-                        to enhance transcription quality.
-                      </p>
-                      <button
-                        onClick={() => console.log('Review keywords')}
-                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                      >
-                        Review & Confirm →
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Concepts - Needs Review */}
-                  <div className="w-full p-3.5 rounded-lg border border-transparent">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="font-medium text-sm text-neutral-900">
-                          Concepts
-                        </div>
-                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
-                      </div>
-                      <p className="text-xs text-neutral-600">
-                        <span className="font-medium text-neutral-900">
-                          3 concepts
-                        </span>{' '}
-                        extracted from your discussion guide
-                      </p>
-                      <button
-                        onClick={() => console.log('Review concepts')}
-                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                      >
-                        Review & Confirm →
-                      </button>
+                      )}
                     </div>
                   </div>
                 </div>
