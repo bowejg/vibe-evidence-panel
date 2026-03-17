@@ -112,9 +112,28 @@ export function FilesFullscreen({
                     </td>
                     <td className="w-[15%] px-6 py-4">
                       {processedFiles.includes(interview.id) ? (
-                        <span className="text-sm text-neutral-700">
-                          {fileParticipants[interview.id]}
-                        </span>
+                        <div className="flex items-center -space-x-1.5">
+                          {fileParticipants[interview.id]
+                            .split(', ')
+                            .map((speaker, idx) => {
+                              const isModerator =
+                                speaker.toLowerCase() === 'moderator'
+                              const firstLetter = speaker
+                                .charAt(0)
+                                .toUpperCase()
+                              return (
+                                <div
+                                  key={idx}
+                                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold text-white ${
+                                    isModerator ? 'bg-blue-500' : 'bg-teal-500'
+                                  }`}
+                                  title={speaker}
+                                >
+                                  {firstLetter}
+                                </div>
+                              )
+                            })}
+                        </div>
                       ) : (
                         <select className="text-sm text-neutral-700 bg-white border border-neutral-200 rounded-lg px-3 py-1.5 hover:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer transition-colors appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%3E%3cpath%20fill%3D%22%239ca3af%22%20d%3D%22M4.427%205.927l3.396%203.396a.25.25%200%200%200%20.354%200l3.396-3.396A.25.25%200%200%200%2011.396%205.5H4.604a.25.25%200%200%200-.177.427z%22%2F%3E%3c%2Fsvg%3E')] bg-[length:16px_16px] bg-[center_right_0.5rem] bg-no-repeat pr-8">
                           <option value="1">1</option>
