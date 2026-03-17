@@ -4,6 +4,7 @@ import { FilesUpload } from '@/components/FilesUpload'
 import { StudySetup } from '@/components/StudySetup'
 import { AnalysisGrid } from '@/components/AnalysisGrid'
 import { AIChat } from '@/components/AIChat'
+import { Toaster } from '@/components/ui/sonner'
 
 type Tab = 'study-setup' | 'analysis-grid' | 'ai-chat'
 
@@ -22,7 +23,7 @@ function App() {
     <div className="h-screen bg-[#fafafa] flex flex-col">
       {/* Top Navigation Toggle */}
       <div className="flex-shrink-0 border-b border-neutral-200/60 bg-white/80 backdrop-blur-sm py-4 z-10">
-        <div className="max-w-7xl mx-auto px-8 flex justify-center">
+        <div className="max-w-[1800px] mx-auto px-12 flex justify-center">
           <div className="inline-flex rounded-lg p-0.5 bg-neutral-100/80 shadow-sm">
             <button
               onClick={() => setActiveTab('study-setup')}
@@ -71,6 +72,7 @@ function App() {
           </>
         )}
       </div>
+      <Toaster />
     </div>
   )
 }
