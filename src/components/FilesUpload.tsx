@@ -62,10 +62,10 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left/Main Column (2/3 width) */}
-          <div className="lg:col-span-2 space-y-5">
+      <div className="max-w-[1800px] mx-auto px-12 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left/Main Column (3/4 width) */}
+          <div className="lg:col-span-3 space-y-5">
             {/* Project Header */}
             <div className="bg-white rounded-xl shadow-sm border border-neutral-200/60 p-8 space-y-5 hover:shadow-md transition-shadow duration-200">
               <h1 className="text-2xl font-semibold text-neutral-900 tracking-tight">
@@ -221,90 +221,145 @@ export function FilesUpload({ onFilesUploaded }: FilesUploadProps) {
 
                 <div className="space-y-2">
                   {/* Discussion Guide - Completed */}
-                  <div className="w-full flex items-start space-x-3 p-3.5 rounded-lg bg-neutral-50/50">
-                    <div className="mt-0.5">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm">
+                  <div className="w-full p-3.5 rounded-lg bg-neutral-50/50 border border-transparent">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-medium text-sm text-neutral-900">
+                          Discussion Guide
+                        </div>
+                        <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm flex-shrink-0">
+                          <svg
+                            className="w-2.5 h-2.5 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2.5}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
                         <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          stroke="currentColor"
+                          className="w-4 h-4 text-red-500 flex-shrink-0"
+                          fill="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2.5}
-                            d="M5 13l4 4L19 7"
-                          />
+                          <path d="M7 18h10v-1H7v1zM17 14H7v-1h10v1zm0-4H7V9h10v1zm2-6H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V6h14v14z" />
                         </svg>
+                        <span className="text-xs text-neutral-600">
+                          PSP_Discussion_Guide.pdf
+                        </span>
                       </div>
-                    </div>
-                    <div className="space-y-0.5 flex-1">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Discussion Guide
-                      </div>
-                      <p className="text-xs text-neutral-500 leading-relaxed">
-                        Upload your interviews here to get started on your
-                        analysis
-                      </p>
+                      <button
+                        onClick={() =>
+                          console.log('Add another discussion guide')
+                        }
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        + Add another
+                      </button>
                     </div>
                   </div>
 
-                  {/* Segments - Not completed */}
-                  <button
-                    onClick={() => console.log('Segments clicked')}
-                    className="w-full flex items-start space-x-3 p-3.5 rounded-lg hover:bg-neutral-50/50 text-left transition-all duration-150 border border-transparent hover:border-neutral-200/60"
-                  >
-                    <div className="mt-0.5">
-                      <div className="w-5 h-5 rounded-full border-2 border-neutral-300"></div>
-                    </div>
-                    <div className="space-y-0.5 flex-1">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Segments
+                  {/* Recruitment Grid - Not Uploaded */}
+                  <div className="w-full p-3.5 rounded-lg border border-transparent">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-medium text-sm text-neutral-900">
+                          Recruitment Grid
+                        </div>
+                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
                       </div>
-                      <p className="text-xs text-neutral-500 leading-relaxed">
-                        Add in the relevant segments for your study
+                      <p className="text-xs text-neutral-600">
+                        Upload your recruitment grid to improve participant
+                        segmentation and analysis accuracy
                       </p>
+                      <button
+                        onClick={() => console.log('Upload recruitment grid')}
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        + Upload Grid
+                      </button>
                     </div>
-                  </button>
+                  </div>
 
-                  {/* Keywords - Not completed */}
-                  <button
-                    onClick={() => console.log('Keywords clicked')}
-                    className="w-full flex items-start space-x-3 p-3.5 rounded-lg hover:bg-neutral-50/50 text-left transition-all duration-150 border border-transparent hover:border-neutral-200/60"
-                  >
-                    <div className="mt-0.5">
-                      <div className="w-5 h-5 rounded-full border-2 border-neutral-300"></div>
-                    </div>
-                    <div className="space-y-0.5 flex-1">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Keywords
+                  {/* Segments - Needs Review */}
+                  <div className="w-full p-3.5 rounded-lg border border-transparent">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-medium text-sm text-neutral-900">
+                          Segments
+                        </div>
+                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
                       </div>
-                      <p className="text-xs text-neutral-500 leading-relaxed">
-                        Upload your interviews here to get started on your
-                        analysis
+                      <p className="text-xs text-neutral-600">
+                        <span className="font-medium text-neutral-900">
+                          4 segments
+                        </span>{' '}
+                        extracted from your discussion guide
                       </p>
+                      <button
+                        onClick={() => console.log('Review segments')}
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        Review & Confirm →
+                      </button>
                     </div>
-                  </button>
+                  </div>
 
-                  {/* Concepts - Not completed */}
-                  <button
-                    onClick={() => console.log('Concepts clicked')}
-                    className="w-full flex items-start space-x-3 p-3.5 rounded-lg hover:bg-neutral-50/50 text-left transition-all duration-150 border border-transparent hover:border-neutral-200/60"
-                  >
-                    <div className="mt-0.5">
-                      <div className="w-5 h-5 rounded-full border-2 border-neutral-300"></div>
-                    </div>
-                    <div className="space-y-0.5 flex-1">
-                      <div className="font-medium text-sm text-neutral-900">
-                        Concepts
+                  {/* Keywords - Needs Review */}
+                  <div className="w-full p-3.5 rounded-lg border border-transparent">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-medium text-sm text-neutral-900">
+                          Keywords
+                        </div>
+                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
                       </div>
-                      <p className="text-xs text-neutral-500 leading-relaxed">
-                        Upload your interviews here to get started on your
-                        analysis
+                      <p className="text-xs text-neutral-600">
+                        <span className="font-medium text-neutral-900">
+                          7 keywords
+                        </span>{' '}
+                        extracted from your discussion guide. These will be used
+                        to enhance transcription quality.
                       </p>
+                      <button
+                        onClick={() => console.log('Review keywords')}
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        Review & Confirm →
+                      </button>
                     </div>
-                  </button>
+                  </div>
+
+                  {/* Concepts - Needs Review */}
+                  <div className="w-full p-3.5 rounded-lg border border-transparent">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-medium text-sm text-neutral-900">
+                          Concepts
+                        </div>
+                        <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
+                      </div>
+                      <p className="text-xs text-neutral-600">
+                        <span className="font-medium text-neutral-900">
+                          3 concepts
+                        </span>{' '}
+                        extracted from your discussion guide
+                      </p>
+                      <button
+                        onClick={() => console.log('Review concepts')}
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        Review & Confirm →
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
