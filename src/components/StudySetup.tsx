@@ -680,7 +680,25 @@ export function StudySetup() {
                           Language
                         </th>
                         <th className="w-[42%] pb-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                          Segments
+                          <div className="flex items-center gap-2">
+                            <span>Segments</span>
+                            <button className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-xs font-medium hover:bg-purple-100 hover:border-purple-300 transition-colors normal-case">
+                              <svg
+                                className="w-3 h-3"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                                />
+                              </svg>
+                              Automations
+                            </button>
+                          </div>
                         </th>
                         <th className="pb-3 text-right pr-4 text-xs font-medium text-neutral-500 uppercase tracking-wide">
                           Status
@@ -1169,6 +1187,28 @@ export function StudySetup() {
                       className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
                     >
                       + Add another
+                    </button>
+                  </div>
+                </div>
+
+                {/* Recruitment Grid - Not Uploaded */}
+                <div className="w-full p-3.5 rounded-lg border border-transparent">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-medium text-sm text-neutral-900">
+                        Recruitment Grid
+                      </div>
+                      <div className="w-4 h-4 rounded-full border-2 border-neutral-300 flex-shrink-0"></div>
+                    </div>
+                    <p className="text-xs text-neutral-600">
+                      Upload your recruitment grid to improve participant
+                      segmentation and analysis accuracy
+                    </p>
+                    <button
+                      onClick={() => console.log('Upload recruitment grid')}
+                      className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                    >
+                      + Upload Grid
                     </button>
                   </div>
                 </div>
