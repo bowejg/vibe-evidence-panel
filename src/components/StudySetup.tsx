@@ -47,6 +47,8 @@ export function StudySetup() {
   const [currentStep, setCurrentStep] = useState(2) // Track current stepper step (1-5)
   const [isTranscribeModalOpen, setIsTranscribeModalOpen] = useState(false)
   const [transcribeFileId, setTranscribeFileId] = useState<number | null>(null)
+  const [isRecordMeetingDropdownOpen, setIsRecordMeetingDropdownOpen] =
+    useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Map of file IDs to participant names
@@ -337,6 +339,20 @@ export function StudySetup() {
       setViewMode('files')
     }
   }, [viewMode, processedFiles.length])
+
+  // Close record meeting dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (isRecordMeetingDropdownOpen) {
+        setIsRecordMeetingDropdownOpen(false)
+      }
+    }
+
+    if (isRecordMeetingDropdownOpen) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isRecordMeetingDropdownOpen])
 
   const handleSelectAll = () => {
     if (selectedFiles.length === uploadedInterviews.length) {
@@ -1604,7 +1620,7 @@ export function StudySetup() {
           </div>
 
           {/* Upload Research Material Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-neutral-200/60 overflow-hidden hover:shadow-md transition-shadow duration-200">
+          <div className="bg-white rounded-xl shadow-sm border border-neutral-200/60 hover:shadow-md transition-shadow duration-200">
             <div className="p-6 space-y-4">
               <div className="space-y-1.5">
                 <h3 className="text-base font-semibold text-neutral-900 tracking-tight">
@@ -1622,44 +1638,126 @@ export function StudySetup() {
                 >
                   + Add Files
                 </button>
-                <button
-                  onClick={() => console.log('Link calendar')}
-                  className="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 shadow-sm flex items-center justify-center gap-2"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Link Calendar
-                </button>
-                <button
-                  onClick={() => console.log('Record live meeting')}
-                  className="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 shadow-sm flex items-center justify-center gap-2"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Record Live Meeting
-                </button>
+                <div className="relative">
+                  <div className="flex w-full">
+                    <button
+                      onClick={() =>
+                        console.log('Record meeting - main action')
+                      }
+                      className="flex-1 px-4 py-2.5 rounded-l-lg border border-neutral-200 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-all duration-150 shadow-sm"
+                    >
+                      <div className="flex items-center justify-center gap-2 transform translate-x-3">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Record Meeting
+                      </div>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsRecordMeetingDropdownOpen(
+                          !isRecordMeetingDropdownOpen,
+                        )
+                      }}
+                      className="px-2 py-2.5 rounded-r-lg border border-l-0 border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 transition-all duration-150 shadow-sm"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  {isRecordMeetingDropdownOpen && (
+                    <div className="absolute right-0 top-12 w-full bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50">
+                      <button
+                        onClick={() => {
+                          console.log('Join Meeting Now')
+                          setIsRecordMeetingDropdownOpen(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Join Meeting Now
+                      </button>
+                      <button
+                        onClick={() => {
+                          console.log('Invite By Email')
+                          setIsRecordMeetingDropdownOpen(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Invite By Email
+                      </button>
+                      <button
+                        onClick={() => {
+                          console.log('Link From Calendar')
+                          setIsRecordMeetingDropdownOpen(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Link From Calendar
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
