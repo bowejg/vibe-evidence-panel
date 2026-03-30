@@ -226,7 +226,18 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                           strokeWidth="4"
                           fill="none"
                         />
-                        {/* Progress circle */}
+                        {/* Green segment - Strong evidence (5 participants) */}
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="#10b981"
+                          strokeWidth="4"
+                          fill="none"
+                          strokeDasharray={`${(5 / 20) * 62.83} 62.83`}
+                          strokeLinecap="round"
+                        />
+                        {/* Orange segment - Moderate evidence (3 participants) */}
                         <circle
                           cx="12"
                           cy="12"
@@ -234,7 +245,8 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                           stroke="#f97316"
                           strokeWidth="4"
                           fill="none"
-                          strokeDasharray={`${(8 / 20) * 62.83} 62.83`}
+                          strokeDasharray={`${(3 / 20) * 62.83} 62.83`}
+                          strokeDashoffset={-((5 / 20) * 62.83)}
                           strokeLinecap="round"
                         />
                       </svg>
@@ -253,7 +265,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-blue-200 bg-blue-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -368,7 +380,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-orange-200 bg-orange-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -783,7 +795,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-green-200 bg-green-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -901,7 +913,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-purple-200 bg-purple-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -981,7 +993,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-pink-200 bg-pink-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -1061,7 +1073,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-teal-200 bg-teal-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -1173,7 +1185,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-indigo-200 bg-indigo-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
@@ -1255,7 +1267,7 @@ export function EvidencePanels({ onBack }: EvidencePanelsProps) {
                   <div
                     className={
                       groupByParticipant
-                        ? 'border-2 border-emerald-200 bg-emerald-50/30 rounded-lg p-3 space-y-3'
+                        ? 'border-2 border-transparent hover:border-blue-200 hover:bg-blue-50/30 rounded-lg p-3 space-y-3 transition-colors'
                         : 'space-y-3'
                     }
                   >
