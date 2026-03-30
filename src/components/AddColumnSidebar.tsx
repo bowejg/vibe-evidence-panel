@@ -33,7 +33,7 @@ const DISCUSSION_GUIDE_QUESTIONS = [
 ]
 
 export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
-  const [columnName, setColumnName] = useState('')
+  const [columnName] = useState('')
   const [extractionPrompt, setExtractionPrompt] = useState('')
   const [selectedConcept, setSelectedConcept] = useState('')
   const [returnValueType, setReturnValueType] = useState('')

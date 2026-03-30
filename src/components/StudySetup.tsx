@@ -1,22 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import {
   Dialog,
   DialogContent,
@@ -33,7 +16,6 @@ export function StudySetup() {
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [showAllSegments, setShowAllSegments] = useState(false)
   const [showAllKeywords, setShowAllKeywords] = useState(false)
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [isSegmentsReviewOpen, setIsSegmentsReviewOpen] = useState(false)
   const [isFilesFullscreenOpen, setIsFilesFullscreenOpen] = useState(false)
   const [viewMode, setViewMode] = useState<'files' | 'participants'>('files')
@@ -95,15 +77,6 @@ export function StudySetup() {
   const displayedKeywords = showAllKeywords
     ? allKeywords
     : allKeywords.slice(0, 5)
-
-  const fileTypes = [
-    { name: 'MP3', icon: '🎵' },
-    { name: 'MP4', icon: '🎬' },
-    { name: 'PDF', icon: '📄' },
-    { name: 'DOC', icon: '📝' },
-    { name: 'TXT', icon: '📃' },
-    { name: 'OTHER', icon: '📎' },
-  ]
 
   // Sample uploaded files data - preprocessing state
   const uploadedInterviews = [
@@ -259,13 +232,6 @@ export function StudySetup() {
     },
   ]
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      setUploadedFiles([...uploadedFiles, ...Array.from(files)])
-    }
-  }
-
   const handleAddFilesClick = () => {
     fileInputRef.current?.click()
   }
@@ -282,7 +248,7 @@ export function StudySetup() {
 
   // Process files with random delay (2-4 seconds) in parallel
   useEffect(() => {
-    const timers: NodeJS.Timeout[] = []
+    const timers: ReturnType<typeof setTimeout>[] = []
 
     processingFiles.forEach((fileId) => {
       // Skip if already processed
@@ -782,7 +748,7 @@ export function StudySetup() {
                 <div className="px-8 pb-6 max-h-[480px] overflow-y-auto">
                   <table className="w-full table-fixed">
                     <tbody className="divide-y divide-neutral-50">
-                      {uploadedInterviews.map((interview, index) => (
+                      {uploadedInterviews.map((interview) => (
                         <tr
                           key={interview.id}
                           className="group hover:bg-neutral-50/50 transition-colors duration-150"
