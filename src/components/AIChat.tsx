@@ -76,27 +76,121 @@ export function AIChat() {
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Side - Main Content Area */}
-          <div className="flex-1 overflow-auto">
-            <div className="max-w-3xl mx-auto px-16 py-16">
-              <p className="text-[21px] leading-[1.6] text-neutral-700 font-normal">
+          <div className="flex-1 overflow-auto pb-40">
+            <div className="max-w-4xl mx-auto px-16 py-12">
+              {/* Main Heading */}
+              <h1 className="text-2xl font-semibold text-neutral-900 mb-6">
+                How Oncologists Stay Informed About Treatment Developments
+              </h1>
+
+              <p className="text-base text-neutral-700 mb-8">
                 Oncologists rely on a diverse ecosystem of information sources
-                rather than any single channel{' '}
-                <button
-                  onClick={() => setIsPanelOpen(true)}
-                  className="inline-flex items-center px-2 py-0.5 text-[17px] font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
-                >
-                  (14 Participants)
-                </button>
-                . As one put it: "You learn on the fly. You can learn from other
-                colleagues, you can learn at plenary sessions... pharmaceutical
-                representatives... emails or announcements. It's all the above."{' '}
-                <button
-                  onClick={() => setIsPanelOpen(true)}
-                  className="inline-flex items-center px-2 py-0.5 text-[17px] font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
-                >
-                  (1 Participant)
-                </button>
+                rather than any single channel. Our research reveals several key
+                patterns in how they gather and synthesize information:
               </p>
+
+              {/* Multi-Channel Approach Section */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+                  Multi-Channel Information Gathering
+                </h2>
+                <ul className="space-y-3 ml-6">
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    Oncologists actively monitor congress presentations, medical
+                    journal articles, and manufacturer communications to stay
+                    current{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      8 Participants
+                    </button>
+                  </li>
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    They combine academic sources, professional meetings, and
+                    direct communication with pharmaceutical representatives{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      6 Participants
+                    </button>
+                  </li>
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    Peer networks, scientific literature, and industry updates
+                    are all considered essential components of their information
+                    ecosystem{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      5 Participants
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Triangulation & Validation Section */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+                  Information Triangulation & Validation
+                </h2>
+                <ul className="space-y-3 ml-6">
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    Oncologists triangulate information across multiple sources
+                    before making clinical decisions, cross-referencing journal
+                    articles with conference presentations and colleague
+                    discussions{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      4 Participants
+                    </button>
+                  </li>
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    They emphasize that no single source provides a complete
+                    picture, requiring synthesis from multiple perspectives{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      3 Participants
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Different Sources, Different Purposes Section */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+                  Different Sources Serve Different Purposes
+                </h2>
+                <ul className="space-y-3 ml-6">
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    Academic journals provide the evidence base and methodology,
+                    conferences offer clinical context, and colleagues provide
+                    practical reality checks{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      3 Participants
+                    </button>
+                  </li>
+                  <li className="text-base text-neutral-700 leading-relaxed list-disc">
+                    Networking events and conferences deliver both formal
+                    presentations and valuable hallway conversations that reveal
+                    real-world clinical challenges{' '}
+                    <button
+                      onClick={() => setIsPanelOpen(true)}
+                      className="inline-flex items-center px-2 py-0.5 text-xs font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
+                    >
+                      2 Participants
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 
@@ -104,7 +198,7 @@ export function AIChat() {
           {isPanelOpen && (
             <div className="w-[650px] border-l border-neutral-200 bg-white flex flex-col h-full overflow-hidden">
               {/* Sticky Header with Claim */}
-              <div className="flex-shrink-0 p-6 pb-4 bg-white space-y-4">
+              <div className="flex-shrink-0 px-6 pt-6 pb-4 bg-white space-y-4">
                 {/* Claim Box */}
                 <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
                   <p className="text-sm text-neutral-700 leading-relaxed">
@@ -1354,6 +1448,70 @@ export function AIChat() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Fixed Bottom Input Area - Only occupies LHS */}
+        <div
+          className={`fixed bottom-0 left-0 bg-white border-t border-neutral-200 z-20 transition-all ${
+            isPanelOpen ? 'right-[650px]' : 'right-0'
+          }`}
+        >
+          <div className="max-w-4xl mx-auto px-16 py-6">
+            <div className="bg-white border border-neutral-300 rounded-2xl shadow-sm overflow-hidden">
+              <input
+                type="text"
+                placeholder="Type @ to filter by participants. Type # to reference concepts."
+                className="w-full px-6 py-4 text-base text-neutral-700 placeholder:text-neutral-400 focus:outline-none"
+              />
+              <div className="flex items-center gap-3 px-6 pb-4">
+                <button className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-700 transition-colors">
+                  <span className="text-neutral-400">#</span>
+                  <span>Concept</span>
+                </button>
+                <button className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-700 transition-colors">
+                  <span className="flex items-center justify-center w-4 h-4 rounded-full bg-neutral-200 text-neutral-600 text-xs">
+                    @
+                  </span>
+                  <span>Segment</span>
+                </button>
+                <button className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-700 transition-colors">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    />
+                  </svg>
+                  <span>Add filter</span>
+                </button>
+                <button className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  <span>Default</span>
+                </button>
+                <button className="ml-auto inline-flex items-center justify-center w-9 h-9 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors">
+                  <span className="text-neutral-500 text-lg font-light">↑</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </TooltipProvider>

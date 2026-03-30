@@ -4,7 +4,6 @@ import { FilesUpload } from '@/components/FilesUpload'
 import { StudySetup } from '@/components/StudySetup'
 import { AnalysisGrid } from '@/components/AnalysisGrid'
 import { AIChat } from '@/components/AIChat'
-import { EvidencePanels } from '@/components/EvidencePanels'
 import { Toaster } from '@/components/ui/sonner'
 
 type Tab = 'study-setup' | 'analysis-grid' | 'ai-chat'
@@ -13,12 +12,6 @@ function App() {
   const [guideUploaded, setGuideUploaded] = useState(false)
   const [filesUploaded, setFilesUploaded] = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('study-setup')
-  const [showEvidencePanels, setShowEvidencePanels] = useState(true)
-
-  // Evidence Panels route (separate from main app) - CHECK THIS FIRST
-  if (showEvidencePanels) {
-    return <EvidencePanels onBack={() => setShowEvidencePanels(false)} />
-  }
 
   // Stage 1: Upload discussion guide
   if (!guideUploaded) {
