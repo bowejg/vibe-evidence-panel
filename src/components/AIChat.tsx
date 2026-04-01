@@ -21,8 +21,12 @@ const AVAILABLE_SEGMENTS = [
   'Private Practice',
 ]
 
-export function AIChat() {
-  const [isPanelOpen, setIsPanelOpen] = useState(false)
+interface AIChatProps {
+  initialPanelOpen?: boolean
+}
+
+export function AIChat({ initialPanelOpen = false }: AIChatProps) {
+  const [isPanelOpen, setIsPanelOpen] = useState(initialPanelOpen)
   const [expandedQuotes, setExpandedQuotes] = useState<Set<string>>(new Set())
   const [filterStrength, setFilterStrength] = useState<EvidenceStrength>('all')
   const [selectedSegments, setSelectedSegments] = useState<Set<string>>(

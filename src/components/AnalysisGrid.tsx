@@ -20,8 +20,14 @@ type Participant = {
   ratingReasonCitations: number[]
 }
 
-export function AnalysisGrid() {
-  const [viewMode, setViewMode] = useState<'options' | 'table'>('options')
+interface AnalysisGridProps {
+  initialViewMode?: 'options' | 'table'
+}
+
+export function AnalysisGrid({
+  initialViewMode = 'options',
+}: AnalysisGridProps) {
+  const [viewMode, setViewMode] = useState<'options' | 'table'>(initialViewMode)
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [isCellDetailOpen, setIsCellDetailOpen] = useState(false)
