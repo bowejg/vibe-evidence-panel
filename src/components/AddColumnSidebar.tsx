@@ -16,28 +16,33 @@ const RETURN_VALUE_OPTIONS = [
 ]
 
 const CONCEPTS = [
-  { value: 'product-x', label: 'Product X' },
-  { value: 'product-y', label: 'Product Y' },
-  { value: 'product-z', label: 'Product Z' },
-  { value: 'treatment-a', label: 'Treatment A' },
-  { value: 'therapy-b', label: 'Therapy B' },
+  { value: 'search-discovery', label: 'Search & Discovery' },
+  { value: 'collaboration', label: 'Collaboration' },
+  { value: 'knowledge-sharing', label: 'Knowledge Sharing' },
+  { value: 'version-control', label: 'Version Control' },
+  { value: 'onboarding', label: 'Onboarding' },
 ]
 
 const DISCUSSION_GUIDE_QUESTIONS = [
-  'Question 1: Initial Product Response',
-  'Question 2: Treatment Experience',
-  'Question 3: Side Effects',
-  'Question 4: Quality of Life Impact',
-  'Question 5: Comparison to Alternatives',
-  'Question 6: Future Expectations',
+  'Task 1: Finding previous design work',
+  'Task 2: Accessing research findings',
+  'Task 3: Locating technical documentation',
+  'Task 4: Sharing work with team members',
+  'Task 5: Understanding project history',
+  'Task 6: Managing multiple tool workflows',
 ]
 
 export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
-  const [columnName] = useState('')
-  const [extractionPrompt, setExtractionPrompt] = useState('')
+  const [columnName] = useState('Time Spent on Research Requests')
+  const [extractionPrompt, setExtractionPrompt] = useState(
+    'How much time (in hours per week) did each participant estimate they spend servicing a typical research request from their team?',
+  )
   const [selectedConcept, setSelectedConcept] = useState('')
-  const [returnValueType, setReturnValueType] = useState('')
-  const [selectedQuestions, setSelectedQuestions] = useState<string[]>([])
+  const [returnValueType, setReturnValueType] = useState('number')
+  const [selectedQuestions, setSelectedQuestions] = useState<string[]>([
+    'Task 2: Accessing research findings',
+    'Task 5: Understanding project history',
+  ])
 
   const handleQuestionToggle = (question: string) => {
     setSelectedQuestions((prev) =>
@@ -70,11 +75,26 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
         className="flex-shrink-0 flex items-center justify-between px-8 border-b border-neutral-200/60 bg-neutral-50/50"
         style={{ height: '44px' }}
       >
-        <input
-          type="text"
-          defaultValue="Untitled"
-          className="text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-transparent border-none outline-none focus:text-neutral-900 transition-colors"
-        />
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <svg
+            className="w-4 h-4 text-teal-500 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            defaultValue={columnName}
+            className="flex-1 min-w-0 text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-transparent border-none outline-none focus:text-neutral-900 transition-colors"
+          />
+        </div>
         <div className="flex items-center gap-2">
           <button className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 bg-white shadow-sm text-xs font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all">
             <svg
@@ -109,13 +129,14 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
             What do you want to extract?
           </label>
           <p className="text-xs text-neutral-500 leading-relaxed">
-            Describe what you want to summarise or extract from each of your
-            research participants.
+            Describe what you want to extract from each participant. For
+            numerical data, include units (e.g., hours per week, percentage,
+            rating 1-10).
           </p>
           <textarea
             value={extractionPrompt}
             onChange={(e) => setExtractionPrompt(e.target.value)}
-            placeholder="E.g. Summarise their initial response to Product X"
+            placeholder="E.g. How many hours per week does each participant spend searching for past research?"
             rows={6}
             className="w-full px-3.5 py-2.5 border border-neutral-200 rounded-lg text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-300 focus:border-neutral-300 resize-none transition-all"
           />
@@ -127,7 +148,7 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
             Which concept does this relate to?
           </label>
           <p className="text-xs text-neutral-500 leading-relaxed">
-            Select the product, treatment, or concept this column analyzes
+            Select the topic or theme this column analyzes (optional)
           </p>
           <select
             value={selectedConcept}
@@ -177,6 +198,33 @@ export function AddColumnSidebar({ isOpen, onClose }: AddColumnSidebarProps) {
               </option>
             ))}
           </select>
+          {returnValueType === 'number' && (
+            <div className="flex items-start gap-2 p-3 bg-teal-50 border border-teal-200 rounded-lg">
+              <svg
+                className="w-4 h-4 text-teal-600 flex-shrink-0 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-teal-900">
+                  Number column selected
+                </p>
+                <p className="text-xs text-teal-700 leading-relaxed">
+                  The AI will extract numerical values (e.g., 5, 10.5, 3-4). You
+                  can specify ranges, limits, or units in your extraction
+                  prompt.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Questions to Include */}

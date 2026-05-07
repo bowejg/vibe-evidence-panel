@@ -11,13 +11,16 @@ type Participant = {
   participant: string
   segment: string
   date: string
-  diagnosis: string
-  diagnosisCitations: number[]
-  unmetNeeds: string
-  unmetNeedsCitations: number[]
-  rating: number
-  ratingReason: string
-  ratingReasonCitations: number[]
+  whenContext: string
+  whenContextCitations: number[]
+  wantTo: string
+  wantToCitations: number[]
+  soThat: string
+  soThatCitations: number[]
+  currentSolution: string
+  currentSolutionCitations: number[]
+  painPoints: string
+  painPointsCitations: number[]
 }
 
 interface AnalysisGridProps {
@@ -39,15 +42,15 @@ export function AnalysisGrid({
 
   // Citation to cell mapping (citation number -> cell ID)
   const citationMap: Record<string, string> = {
-    '1': 'cell-0-unmetNeeds',
-    '3': 'cell-0-diagnosis',
-    '4': 'cell-0-unmetNeeds',
-    '5': 'cell-1-unmetNeeds',
-    '6': 'cell-1-diagnosis',
-    '7': 'cell-2-unmetNeeds',
-    '8': 'cell-2-diagnosis',
-    '9': 'cell-2-unmetNeeds',
-    '11': 'cell-3-unmetNeeds',
+    '1': 'cell-0-whenContext',
+    '3': 'cell-0-wantTo',
+    '4': 'cell-0-painPoints',
+    '5': 'cell-1-whenContext',
+    '6': 'cell-1-wantTo',
+    '7': 'cell-2-painPoints',
+    '8': 'cell-2-soThat',
+    '9': 'cell-2-currentSolution',
+    '11': 'cell-3-painPoints',
   }
 
   const handleCitationClick = (citationNumber: string) => {
@@ -95,10 +98,11 @@ export function AnalysisGrid({
     // Mark all cells as loading
     const allCells = new Set<string>()
     participants.forEach((_, index) => {
-      allCells.add(`cell-${index}-diagnosis`)
-      allCells.add(`cell-${index}-unmetNeeds`)
-      allCells.add(`cell-${index}-rating`)
-      allCells.add(`cell-${index}-ratingReason`)
+      allCells.add(`cell-${index}-whenContext`)
+      allCells.add(`cell-${index}-wantTo`)
+      allCells.add(`cell-${index}-soThat`)
+      allCells.add(`cell-${index}-currentSolution`)
+      allCells.add(`cell-${index}-painPoints`)
     })
     setLoadingCells(allCells)
 
@@ -122,139 +126,179 @@ export function AnalysisGrid({
   const participants = [
     {
       id: 1,
-      fileName: 'US_onc_4_23jan...',
-      participant: 'US_Onc4',
-      segment: 'Oncologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Patient presented with early stage diagnosis showing classic PSP-Richardson syndrome features including postural instability and vertical gaze palsy. Initial symptoms emerged approximately 18 months prior with unexplained falls and difficulty with downward gaze during reading. Family noticed behavioral changes and executive dysfunction that preceded motor symptoms by several months.',
-      diagnosisCitations: [1, 2, 3],
-      unmetNeeds:
-        'Better treatment options needed for symptom management, particularly for gait instability and falls prevention. More accessible specialist care in rural areas where patients often wait 6+ months for movement disorder appointments. Improved caregiver support programs and respite care options as disease burden increases significantly within first 2 years of diagnosis.',
-      unmetNeedsCitations: [4, 5, 6, 7],
-      rating: 7,
-      ratingReason:
-        'Product shows moderate efficacy in slowing disease progression based on tau PET imaging results, but patients still experience significant side effects including nausea, dizziness, and gastrointestinal issues. The dosing schedule is complex requiring twice-daily administration which impacts compliance. Some improvement noted in postural stability scores after 12 weeks of treatment.',
-      ratingReasonCitations: [8, 9, 10, 11],
+      fileName: 'UXR_Product_Des...',
+      participant: 'P1_Sarah',
+      segment: 'Product Designer',
+      date: '15.02.2026',
+      whenContext:
+        "When I'm working on a new feature and need to understand how similar patterns were implemented in the past, I find myself asking different team members who might know where things are. This happens multiple times a week, especially during the discovery phase of new projects.",
+      whenContextCitations: [1, 2],
+      wantTo:
+        'I want to quickly find and access previous design files, component documentation, and research findings all in one place without having to remember which tool or folder structure each team uses.',
+      wantToCitations: [3, 4],
+      soThat:
+        "So that I can build on existing patterns and insights rather than starting from scratch or accidentally recreating work that's already been done. This would help me deliver higher quality work faster and maintain consistency across products.",
+      soThatCitations: [5, 6],
+      currentSolution:
+        'Currently using a combination of Figma, Google Drive, Confluence, and Slack search. I bookmark important files but the bookmarks get outdated quickly. Sometimes I just DM designers directly to ask where things are.',
+      currentSolutionCitations: [7, 8],
+      painPoints:
+        "The biggest pain is the time wasted searching across multiple tools. I've spent 30+ minutes looking for a design file I knew existed but couldn't remember where it was saved. Also frustrating when I find something useful but it's outdated with no indication of the current version.",
+      painPointsCitations: [9, 10, 11],
     },
     {
       id: 2,
-      fileName: 'US_neuro_1_24jan...',
-      participant: 'US_Neuro1',
-      segment: 'Neurologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Progressive symptoms over 6 months with predominantly parkinsonian features (PSP-P variant) making differential diagnosis from Parkinson\'s disease challenging initially. Patient showed asymmetric rigidity and bradykinesia with minimal tremor. MRI revealed midbrain atrophy with "hummingbird sign" which helped confirm PSP diagnosis. Cognitive assessment showed frontal lobe dysfunction with preserved memory.',
-      diagnosisCitations: [1, 3, 5],
-      unmetNeeds:
-        "More specific diagnostic biomarkers to enable earlier and more confident diagnosis, particularly to distinguish PSP-P from idiopathic Parkinson's disease. Better imaging protocols and standardization across facilities. Need for more accessible genetic testing given possible hereditary components in some cases. Improved multidisciplinary care coordination between neurology, ophthalmology, and rehabilitation services.",
-      unmetNeedsCitations: [2, 6, 8, 9],
-      rating: 8,
-      ratingReason:
-        'Shows promising results in clinical trials with statistically significant reduction in tau burden on PET imaging at 24 weeks. Patients demonstrate measurable improvements in PSP rating scale scores, particularly in gait and posture domains. Relatively good tolerability profile compared to previous investigational therapies. Long-term data still needed to assess durability of treatment response.',
-      ratingReasonCitations: [4, 7, 10],
+      fileName: 'UXR_Eng_Lead_02...',
+      participant: 'P2_Marcus',
+      segment: 'Engineering Lead',
+      date: '16.02.2026',
+      whenContext:
+        "When I'm onboarding new engineers to the team, they struggle to find documentation about our architecture decisions, API specs, and code standards. Currently takes 2-3 weeks before they feel comfortable knowing where everything is stored.",
+      whenContextCitations: [1, 2, 3],
+      wantTo:
+        'I want a single source of truth for all technical documentation, ADRs (Architecture Decision Records), and code examples that is automatically kept up-to-date and searchable by topic, technology, or project.',
+      wantToCitations: [4, 5],
+      soThat:
+        'So that new team members can ramp up faster and existing engineers can easily reference past decisions without interrupting others. This would reduce duplicate work and ensure architectural consistency across services.',
+      soThatCitations: [6, 7],
+      currentSolution:
+        "Mix of GitHub wikis, Notion pages, and README files scattered across 50+ repos. Some teams use Confluence, others use Google Docs. There's no standard and search doesn't work across tools.",
+      currentSolutionCitations: [8, 9],
+      painPoints:
+        "Documentation drift is massive - what's written is often outdated or contradicts current implementation. Onboarding takes way too long because new hires don't know what to trust. I spend hours each week answering the same questions that should be documented somewhere.",
+      painPointsCitations: [10, 11, 12],
     },
     {
       id: 3,
-      fileName: 'US_onc_7_25jan...',
-      participant: 'US_Onc7',
-      segment: 'Oncologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Late diagnosis complicated treatment planning as patient had already experienced multiple falls resulting in hip fracture requiring surgical intervention. Symptoms initially attributed to normal aging and depression which delayed specialist referral by approximately 12-15 months. By time of definitive PSP diagnosis, patient had severe dysphagia requiring modified diet and speech therapy, plus marked executive dysfunction affecting daily decision-making.',
-      diagnosisCitations: [2, 4, 6, 8],
-      unmetNeeds:
-        'Earlier screening methods for at-risk populations, particularly targeting primary care physicians who often see these patients first. Better educational materials to help distinguish PSP from other neurodegenerative conditions and normal aging. More robust swallowing assessment protocols given high aspiration pneumonia risk. Enhanced fall prevention programs and home safety evaluations early in disease course.',
-      unmetNeedsCitations: [1, 3, 5, 7, 9],
-      rating: 6,
-      ratingReason:
-        'Mixed results in patient population with some showing modest benefit while others experienced no meaningful clinical improvement despite biomarker changes. Treatment burden is high with frequent clinic visits for monitoring and dose adjustments. Cost considerations are significant given limited insurance coverage for investigational therapies. Some patients discontinued due to adverse events including elevated liver enzymes and weight loss.',
-      ratingReasonCitations: [10, 11, 12],
+      fileName: 'UXR_ProdMgr_03...',
+      participant: 'P3_Jennifer',
+      segment: 'Product Manager',
+      date: '17.02.2026',
+      whenContext:
+        "When I'm planning a new feature or product update, I need to review past user research, competitive analyses, and feature performance metrics to make informed decisions. This research is currently scattered across Dovetail, Amplitude, Google Slides, and various team Drives.",
+      whenContextCitations: [1, 2],
+      wantTo:
+        'I want to access all historical product research and data in one centralized location where I can filter by product area, user segment, and date range to see the evolution of insights over time.',
+      wantToCitations: [3, 4, 5],
+      soThat:
+        'So that I can make data-driven product decisions without spending days hunting for research artifacts. This would help me avoid repeating past mistakes and build on proven hypotheses across product cycles.',
+      soThatCitations: [6, 7],
+      currentSolution:
+        "Currently maintain my own spreadsheet of links to research studies, but it's incomplete and only covers what I've personally worked on. Rely heavily on asking researchers and PMs to share relevant studies from their personal collections.",
+      currentSolutionCitations: [8, 9],
+      painPoints:
+        "Research discoverability is terrible - I know we've done studies on similar topics but can't find them. Different researchers use different tools and naming conventions. Often duplicate research efforts because we don't know what's already been done. Critical insights get lost when team members leave.",
+      painPointsCitations: [10, 11, 12],
     },
     {
       id: 4,
-      fileName: 'US_neuro_3_26jan...',
-      participant: 'US_Neuro3',
-      segment: 'Neurologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Challenging differential diagnosis between PSP and corticobasal syndrome (CBS) given prominent limb rigidity and apraxia alongside vertical gaze limitation. Patient exhibited alien limb phenomenon in right arm with cortical sensory loss. Advanced neuroimaging including tau PET helped distinguish 4R tauopathy pattern consistent with PSP. Neuropsychological testing revealed asymmetric cognitive impairment with visuospatial deficits more prominent than language.',
-      diagnosisCitations: [3, 5, 7, 9],
-      unmetNeeds:
-        'Improved biomarker panels to better distinguish between different 4R tauopathies including PSP, CBS, and progressive apraxia of speech variants. More widespread access to specialized tau PET imaging which remains limited to major academic centers. Need for consensus diagnostic criteria that incorporate newer imaging and biofluid markers. Enhanced training for community neurologists in recognizing atypical PSP presentations.',
-      unmetNeedsCitations: [2, 4, 6, 10],
-      rating: 9,
-      ratingReason:
-        'Strong efficacy data from Phase 2b trial showing dose-dependent reduction in tau pathology with best results at highest tolerated dose. Patients show clinically meaningful improvements in both motor and cognitive domains using validated outcome measures. Safety profile is favorable with mostly mild adverse events. Mechanism of action targeting tau aggregation is well-supported by preclinical and translational studies.',
-      ratingReasonCitations: [1, 8, 11, 12],
+      fileName: 'UXR_UXRes_04...',
+      participant: 'P4_David',
+      segment: 'UX Researcher',
+      date: '18.02.2026',
+      whenContext:
+        "When I'm starting a new research project, I need to review what we already know about a topic to avoid asking users the same questions twice and to build on existing knowledge. Finding relevant past studies takes significant manual effort.",
+      whenContextCitations: [1, 2, 3],
+      wantTo:
+        'I want a searchable repository of all research studies with standardized tagging (user segment, research method, key themes) and the ability to quickly scan findings without downloading full reports.',
+      wantToCitations: [4, 5],
+      soThat:
+        'So that I can discover relevant insights before designing my research plan and reference past findings in my reports to show how new insights connect to our existing knowledge base.',
+      soThatCitations: [6, 7],
+      currentSolution:
+        "Maintain a Dovetail workspace but not everyone uses it consistently. Also have a Google Drive folder but the structure isn't intuitive. End up creating my own research repository in Notion just for my projects.",
+      currentSolutionCitations: [8, 9],
+      painPoints:
+        "We definitely duplicate research - I've discovered studies on the same topic 6 months after I conducted mine. No way to know what research is in progress to coordinate efforts. Huge amount of valuable insights are locked in slide decks that only get viewed once in a stakeholder presentation.",
+      painPointsCitations: [10, 11, 12],
     },
     {
       id: 5,
-      fileName: 'UK_onc_2_27jan...',
-      participant: 'UK_Onc2',
-      segment: 'Oncologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Typical presentation and progression of PSP-Richardson syndrome with supranuclear vertical gaze palsy developing early in disease course followed by postural instability with backward falls. Patient showed characteristic "surprised" facial expression with reduced blink rate and eyelid retraction. Speech became increasingly hypophonic with scanning dysarthria. MRI demonstrated midbrain atrophy with superior cerebellar peduncle atrophy.',
-      diagnosisCitations: [1, 4, 6],
-      unmetNeeds:
-        'Patient and caregiver education resources that are culturally appropriate and available in multiple languages given diverse patient populations. Better integration of palliative care earlier in disease trajectory rather than waiting until end-stage. More options for non-pharmacological interventions including specialized physical therapy focused on fall prevention and weighted walkers. Improved access to assistive technologies for communication as dysarthria progresses.',
-      unmetNeedsCitations: [3, 5, 7, 8, 11],
-      rating: 7,
-      ratingReason:
-        'Good tolerability profile with low discontinuation rates in clinical trials, making it practical for long-term use in a progressive condition. Demonstrates stabilization of symptoms in some patients rather than improvement which may still represent clinical benefit. Biomarker data supports target engagement though correlation with clinical outcomes needs further validation. Patient quality of life measures show modest but consistent improvements particularly in daily functioning scales.',
-      ratingReasonCitations: [2, 9, 10, 12],
+      fileName: 'UXR_ContentDes...',
+      participant: 'P5_Rachel',
+      segment: 'Content Designer',
+      date: '19.02.2026',
+      whenContext:
+        "When I'm writing microcopy or content for a new feature, I need to ensure it aligns with our content guidelines, voice and tone principles, and existing patterns. Currently have to check multiple sources to verify I'm following standards.",
+      whenContextCitations: [1, 2],
+      wantTo:
+        'I want a centralized content library with approved copy examples, content patterns, and localization guidelines that I can search by component type, user flow, or content type.',
+      wantToCitations: [3, 4, 5],
+      soThat:
+        'So that I can write consistent, on-brand content faster and reduce the back-and-forth in reviews when stakeholders flag inconsistencies I could have caught earlier.',
+      soThatCitations: [6, 7],
+      currentSolution:
+        "We have a content style guide in Notion, reference copy in Figma files, and some examples in Confluence. I keep my own swipe file of good examples but it's just what I happen to save.",
+      currentSolutionCitations: [8, 9],
+      painPoints:
+        "Content inconsistency across products is embarrassing - same actions have different labels. Style guide exists but it's not comprehensive enough for edge cases. When someone updates the source of truth, there's no notification so I might reference outdated guidelines for weeks.",
+      painPointsCitations: [10, 11, 12],
     },
     {
       id: 6,
-      fileName: 'US_onc_9_28jan...',
-      participant: 'US_Onc9',
-      segment: 'Oncologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Atypical symptoms delayed diagnosis including initial presentation with progressive non-fluent aphasia and apraxia of speech mimicking primary progressive aphasia. Only after 2 years did classic PSP motor features emerge including axial rigidity and vertical gaze palsy. Genetic testing ruled out MAPT mutations. FDG-PET showed hypometabolism in frontal regions and midbrain. This atypical presentation highlights diagnostic challenges in PSP variants.',
-      diagnosisCitations: [2, 5, 8, 10],
-      unmetNeeds:
-        'Better access to movement disorder specialists particularly in underserved geographic areas where wait times exceed 6 months. Telemedicine options for routine follow-up visits to reduce travel burden on patients with significant mobility limitations. More comprehensive multidisciplinary clinics that coordinate neurology, speech therapy, physical therapy, and social work services. Enhanced insurance coverage for specialized evaluations including tau PET imaging.',
-      unmetNeedsCitations: [1, 4, 6, 9, 11],
-      rating: 5,
-      ratingReason:
-        'Limited long-term data beyond 12 months raises questions about durability of any observed benefits and potential for developing tolerance to treatment effects. Preliminary results suggest possible slowing of decline but confidence intervals are wide and clinical significance remains uncertain. Safety concerns emerged regarding potential for QTc prolongation requiring cardiac monitoring. High placebo response rate in trials makes interpreting treatment effects challenging.',
-      ratingReasonCitations: [3, 7, 12],
+      fileName: 'UXR_DataAnalyst...',
+      participant: 'P6_Alex',
+      segment: 'Data Analyst',
+      date: '20.02.2026',
+      whenContext:
+        'When stakeholders ask for metrics or user behavior data, I often need to understand the product context, user flows, and past research to provide meaningful analysis rather than just raw numbers. This context is hard to find.',
+      whenContextCitations: [1, 2],
+      wantTo:
+        'I want access to product documentation, user research findings, and design artifacts linked to specific features or user flows so I can understand the why behind the data.',
+      wantToCitations: [3, 4],
+      soThat:
+        'So that I can provide richer, more actionable insights instead of just dashboards and numbers. This would help me connect quantitative data with qualitative context for better storytelling.',
+      soThatCitations: [5, 6, 7],
+      currentSolution:
+        "Mostly rely on PMs and designers to explain context in Slack conversations. Sometimes dig through JIRA tickets to understand what was built and why. Keep my own notes but they're incomplete.",
+      currentSolutionCitations: [8, 9],
+      painPoints:
+        "I waste time becoming a detective to understand what I'm analyzing. Metrics drop or spike and I have no context for whether it's expected. Often my analyses aren't actionable because I'm missing the product strategy and user research that would make the data meaningful.",
+      painPointsCitations: [10, 11, 12],
     },
     {
       id: 7,
-      fileName: 'US_neuro_5_29jan...',
-      participant: 'US_Neuro5',
-      segment: 'Neurologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Family history of similar neurodegenerative condition in father influenced early detection and prompted genetic counseling. Patient underwent predictive biomarker screening which identified elevated plasma p-tau217 levels before onset of clinical symptoms. Developed classic PSP features over subsequent 18 months including vertical gaze palsy, axial rigidity, and frequent falls. Early diagnosis enabled proactive management planning and clinical trial enrollment.',
-      diagnosisCitations: [3, 6, 7, 9],
-      unmetNeeds:
-        'Genetic testing availability and counseling for families with apparent hereditary patterns even though most PSP is sporadic. Protocols for monitoring at-risk individuals identified through biomarker screening or family history. Ethical guidelines for managing presymptomatic individuals who may carry risk markers. Resources for advance care planning and discussing prognosis with patients and families early in disease course while decision-making capacity is intact.',
-      unmetNeedsCitations: [2, 4, 8, 10, 11],
-      rating: 8,
-      ratingReason:
-        'Positive patient outcomes reported in registries with improvements in activities of daily living and reduced caregiver burden based on validated questionnaires. Treatment appears most effective when initiated early in disease course supporting importance of early diagnosis. Well-designed study methodology with appropriate primary and secondary endpoints. Reasonable cost-benefit profile if disease-modifying effects are confirmed in ongoing extension studies.',
-      ratingReasonCitations: [1, 5, 12],
+      fileName: 'UXR_DesignLead...',
+      participant: 'P7_Michelle',
+      segment: 'Design Lead',
+      date: '21.02.2026',
+      whenContext:
+        "When I'm reviewing work from my team or planning design strategy, I need to ensure we're building on our design system and learnings from past projects rather than reinventing patterns each cycle.",
+      whenContextCitations: [1, 2, 3],
+      wantTo:
+        'I want a comprehensive view of all design work across products including shipped features, research insights, and evolving patterns so I can identify opportunities for standardization and reuse.',
+      wantToCitations: [4, 5],
+      soThat:
+        'So that I can guide my team toward consistency, help them find relevant examples quickly, and make strategic decisions about where to invest in new patterns versus using existing ones.',
+      soThatCitations: [6, 7],
+      currentSolution:
+        "Figma is our main tool but files are organized by project which makes finding patterns hard. Try to maintain a component library but it doesn't capture the context of when/how to use components. Ad-hoc Slack discussions are where a lot of decisions get made.",
+      currentSolutionCitations: [8, 9, 10],
+      painPoints:
+        "Team members duplicate work that already exists because they can't find it. No good way to share learnings across product teams so we repeat mistakes. When designers leave, their knowledge leaves with them. Design reviews surface inconsistencies that should have been caught earlier.",
+      painPointsCitations: [11, 12],
     },
     {
       id: 8,
-      fileName: 'UK_neuro_1_30jan...',
-      participant: 'UK_Neuro1',
-      segment: 'Neurologist',
-      date: '12.03.2026',
-      diagnosis:
-        'Rapid progression required urgent intervention with patient declining from independent ambulation to wheelchair-bound over 8 month period. Developed severe dysphagia necessitating PEG tube placement to prevent aspiration pneumonia. Cognitive decline was particularly prominent with marked executive dysfunction affecting financial decision-making and safety awareness. Required 24-hour care within 1 year of diagnosis which is faster than typical PSP progression.',
-      diagnosisCitations: [1, 4, 5, 8],
-      unmetNeeds:
-        'More treatment alternatives for rapidly progressing patients who may not respond to standard approaches or have exhausted other options. Better prognostic markers to identify fast progressors early who might benefit from more aggressive interventions. Enhanced palliative care services and hospice transition planning given poor prognosis. Support groups specifically for families dealing with rapidly progressive neurodegenerative conditions.',
-      unmetNeedsCitations: [3, 6, 7, 9, 10],
-      rating: 6,
-      ratingReason:
-        'Product works for symptom management but dosing complexity is challenging particularly for patients with cognitive impairment who struggle with medication adherence. Requires careful titration and monitoring making it resource-intensive in clinical practice. Some benefit seen in motor symptoms but minimal impact on cognitive decline which is often most distressing to patients and families. Questions remain about optimal duration of treatment.',
-      ratingReasonCitations: [2, 11, 12],
+      fileName: 'UXR_FrontEnd_08...',
+      participant: 'P8_James',
+      segment: 'Frontend Engineer',
+      date: '22.02.2026',
+      whenContext:
+        "When I'm implementing a feature, I need to understand the design intent, user research behind decisions, and any accessibility requirements. This information is rarely connected to the design files or tickets I work from.",
+      whenContextCitations: [1, 2],
+      wantTo:
+        "I want easy access to the complete context behind any design I'm implementing - including the research, design rationale, accessibility requirements, and any relevant past implementations.",
+      wantToCitations: [3, 4, 5],
+      soThat:
+        'So that I can make better implementation decisions, ask informed questions earlier, and build features that match the intended user experience rather than just the visual design.',
+      soThatCitations: [6, 7],
+      currentSolution:
+        'Get Figma links in tickets, sometimes with brief descriptions. Have to interrupt designers or PMs to ask about context. Component library in Storybook but it only shows code, not the UX rationale.',
+      currentSolutionCitations: [8, 9],
+      painPoints:
+        "I implement things that technically match the design but miss the user intent because I didn't have context. Edge cases come up during implementation that weren't in designs, and I make my best guess. Later learn user research existed that would have influenced my decisions if I'd known about it.",
+      painPointsCitations: [10, 11, 12],
     },
   ]
 
@@ -365,7 +409,7 @@ export function AnalysisGrid({
               </svg>
             </div>
             <span className="text-sm font-semibold text-neutral-900">
-              PSP Assessment Analysis
+              Centralized Repository Research
             </span>
             <svg
               className="w-4 h-4 text-neutral-400"
@@ -536,7 +580,7 @@ export function AnalysisGrid({
                 >
                   <div className="flex items-center gap-2">
                     <svg
-                      className="w-4 h-4 text-neutral-500"
+                      className="w-4 h-4 text-blue-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -545,10 +589,10 @@ export function AnalysisGrid({
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M4 6h16M4 12h16m-7 6h7"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    Diagnosis and journey
+                    When I...
                   </div>
                 </th>
                 <th
@@ -557,7 +601,7 @@ export function AnalysisGrid({
                 >
                   <div className="flex items-center gap-2">
                     <svg
-                      className="w-4 h-4 text-neutral-500"
+                      className="w-4 h-4 text-green-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -566,31 +610,10 @@ export function AnalysisGrid({
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M4 6h16M4 12h16m-7 6h7"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
                       />
                     </svg>
-                    Unmet Needs
-                  </div>
-                </th>
-                <th
-                  className="px-8 py-3.5 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-50/50"
-                  style={{ minWidth: '220px' }}
-                >
-                  <div className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-neutral-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
-                      />
-                    </svg>
-                    Product X rating
+                    I want to...
                   </div>
                 </th>
                 <th
@@ -599,7 +622,7 @@ export function AnalysisGrid({
                 >
                   <div className="flex items-center gap-2">
                     <svg
-                      className="w-4 h-4 text-neutral-500"
+                      className="w-4 h-4 text-purple-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -608,10 +631,58 @@ export function AnalysisGrid({
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M4 6h16M4 12h16m-7 6h7"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    Reason for rating
+                    So that...
+                  </div>
+                </th>
+                <th
+                  className="px-8 py-3.5 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-50/50"
+                  style={{ minWidth: '380px' }}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg
+                      className="w-4 h-4 text-orange-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    Current Solution
+                  </div>
+                </th>
+                <th
+                  className="px-8 py-3.5 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-50/50"
+                  style={{ minWidth: '380px' }}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg
+                      className="w-4 h-4 text-red-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
+                    Pain Points
                   </div>
                 </th>
                 {!isAddColumnOpen &&
@@ -690,9 +761,21 @@ export function AnalysisGrid({
                   <td className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors">
                     <span
                       className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                        participant.segment === 'Oncologist'
-                          ? 'bg-purple-50/50 text-purple-500'
-                          : 'bg-blue-50/50 text-blue-500'
+                        participant.segment === 'Product Designer'
+                          ? 'bg-purple-50/50 text-purple-600'
+                          : participant.segment === 'Engineering Lead'
+                            ? 'bg-blue-50/50 text-blue-600'
+                            : participant.segment === 'Product Manager'
+                              ? 'bg-green-50/50 text-green-600'
+                              : participant.segment === 'UX Researcher'
+                                ? 'bg-pink-50/50 text-pink-600'
+                                : participant.segment === 'Content Designer'
+                                  ? 'bg-orange-50/50 text-orange-600'
+                                  : participant.segment === 'Data Analyst'
+                                    ? 'bg-cyan-50/50 text-cyan-600'
+                                    : participant.segment === 'Design Lead'
+                                      ? 'bg-indigo-50/50 text-indigo-600'
+                                      : 'bg-teal-50/50 text-teal-600'
                       }`}
                     >
                       {participant.segment}
@@ -704,15 +787,15 @@ export function AnalysisGrid({
                     </span>
                   </td>
                   <td
-                    id={`cell-${index}-diagnosis`}
+                    id={`cell-${index}-whenContext`}
                     onDoubleClick={handleCellDoubleClick}
                     className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
-                      highlightedCell === `cell-${index}-diagnosis`
+                      highlightedCell === `cell-${index}-whenContext`
                         ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
                         : ''
                     }`}
                   >
-                    {loadingCells.has(`cell-${index}-diagnosis`) ? (
+                    {loadingCells.has(`cell-${index}-whenContext`) ? (
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
                         <div className="flex-1 space-y-2">
@@ -723,40 +806,8 @@ export function AnalysisGrid({
                       </div>
                     ) : (
                       <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
-                        {participant.diagnosis}
-                        {participant.diagnosisCitations.map((citation, idx) => (
-                          <button
-                            key={idx}
-                            className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
-                          >
-                            [{citation}]
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </td>
-                  <td
-                    id={`cell-${index}-unmetNeeds`}
-                    onDoubleClick={handleCellDoubleClick}
-                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
-                      highlightedCell === `cell-${index}-unmetNeeds`
-                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
-                        : ''
-                    }`}
-                  >
-                    {loadingCells.has(`cell-${index}-unmetNeeds`) ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
-                        <div className="flex-1 space-y-2">
-                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
-                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
-                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
-                        {participant.unmetNeeds}
-                        {participant.unmetNeedsCitations.map(
+                        {participant.whenContext}
+                        {participant.whenContextCitations.map(
                           (citation, idx) => (
                             <button
                               key={idx}
@@ -770,25 +821,15 @@ export function AnalysisGrid({
                     )}
                   </td>
                   <td
-                    id={`cell-${index}-rating`}
-                    className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors"
+                    id={`cell-${index}-wantTo`}
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
+                      highlightedCell === `cell-${index}-wantTo`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
                   >
-                    {loadingCells.has(`cell-${index}-rating`) ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
-                        <div className="h-7 w-12 bg-neutral-200 rounded animate-pulse" />
-                      </div>
-                    ) : (
-                      <div className="inline-flex items-center justify-center px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-900 text-sm font-semibold">
-                        {participant.rating}
-                      </div>
-                    )}
-                  </td>
-                  <td
-                    id={`cell-${index}-ratingReason`}
-                    className="px-8 py-4 bg-white group-hover:bg-neutral-50 transition-colors"
-                  >
-                    {loadingCells.has(`cell-${index}-ratingReason`) ? (
+                    {loadingCells.has(`cell-${index}-wantTo`) ? (
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
                         <div className="flex-1 space-y-2">
@@ -799,8 +840,106 @@ export function AnalysisGrid({
                       </div>
                     ) : (
                       <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
-                        {participant.ratingReason}
-                        {participant.ratingReasonCitations.map(
+                        {participant.wantTo}
+                        {participant.wantToCitations.map((citation, idx) => (
+                          <button
+                            key={idx}
+                            className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            [{citation}]
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    id={`cell-${index}-soThat`}
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
+                      highlightedCell === `cell-${index}-soThat`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
+                  >
+                    {loadingCells.has(`cell-${index}-soThat`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
+                        {participant.soThat}
+                        {participant.soThatCitations.map((citation, idx) => (
+                          <button
+                            key={idx}
+                            className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            [{citation}]
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    id={`cell-${index}-currentSolution`}
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
+                      highlightedCell === `cell-${index}-currentSolution`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
+                  >
+                    {loadingCells.has(`cell-${index}-currentSolution`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
+                        {participant.currentSolution}
+                        {participant.currentSolutionCitations.map(
+                          (citation, idx) => (
+                            <button
+                              key={idx}
+                              className="ml-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                              [{citation}]
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    id={`cell-${index}-painPoints`}
+                    onDoubleClick={handleCellDoubleClick}
+                    className={`px-8 py-4 transition-all duration-500 cursor-pointer bg-white group-hover:bg-neutral-50 ${
+                      highlightedCell === `cell-${index}-painPoints`
+                        ? 'bg-yellow-100 ring-2 ring-yellow-400 ring-inset'
+                        : ''
+                    }`}
+                  >
+                    {loadingCells.has(`cell-${index}-painPoints`) ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-5/6" />
+                          <div className="h-3 bg-neutral-200 rounded animate-pulse w-4/6" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-neutral-700 leading-relaxed line-clamp-4">
+                        {participant.painPoints}
+                        {participant.painPointsCitations.map(
                           (citation, idx) => (
                             <button
                               key={idx}
